@@ -3,10 +3,11 @@ Repository for the ScubaSteve AUV.
 
 The following is the directory structure of the package:
 
+* camera/
 * CMakeLists.txt
-* launch
-* nodes
+* launch/
 * package.xml
 * README.md
-* scripts
-* sim
+* scripts/
+* sim/
+* state_machine/
