@@ -19,7 +19,7 @@ class SplashdownState(smach.State):
         outcome1: 'IDLE'
     """
     def __init__(self):
-    smach.State.__init__(self, outcomes=['outcome1'])
+        smach.State.__init__(self, outcomes=['outcome1'])
 
     def execute(self, userdata):
         rospy.loginfo("Executing state 'SPLASHDOWN'")

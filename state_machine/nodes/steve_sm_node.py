@@ -8,14 +8,14 @@
 import rospy
 import smach
 
-from steve_state_machine import steve_state_machine
+from steve_sm import create_steve_sm
 
 
 def main():
     rospy.init_node('steve_sm')
 
     # Create the state machine
-    sm = steve_state_machine('STEVE')
+    sm = create_steve_sm()
 
     # Execute the state machine plan
     rospy.loginfo("Executing state machine 'STEVE'")
