@@ -1,3 +1,0 @@
-<launch>
-    <node name="steve_node" pkg="scuba_steve" type="steve_node"/>
-</launch>
