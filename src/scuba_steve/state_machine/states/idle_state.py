@@ -14,14 +14,12 @@ class IdleState(smach.State):
     State: 'IDLE'
 
     Outcomes:
-        outcome1: 'COMMS'
-        outcome2: 'EXPLORE'
-        outcome3: 'POWERDOWN'
+        outcome1: 'POWERDOWN'
     """
     def __init__(self):
         smach.State.__init__(
             self,
-            outcomes=['outcome1', 'outcome2', 'outcome3']
+            outcomes=['outcome1']
         )
 
     def execute(self, userdata):

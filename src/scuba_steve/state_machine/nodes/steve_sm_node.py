@@ -8,7 +8,7 @@
 import rospy
 import smach
 
-from steve_sm import create_steve_sm
+from scuba_steve.state_machine.state_machines.steve_sm import create_steve_sm
 
 
 def main():

@@ -39,12 +39,12 @@ def create_steve_sm():
         smach.StateMachine.add(
             'SPLASHDOWN',
             SplashdownState(),
-            transitions='outcome1':'IDLE'}
+            transitions={'outcome1':'IDLE'}
         )
         smach.StateMachine.add(
             'IDLE',
             IdleState(),
-            transitions='outcome1':'POWERDOWN'}
+            transitions={'outcome1':'POWERDOWN'}
         )
         smach.StateMachine.add(
             'POWERDOWN',

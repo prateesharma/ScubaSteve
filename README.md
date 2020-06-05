@@ -1,13 +1,16 @@
 # scuba_steve
-Repository for the ScubaSteve AUV.
+ROS package for the ScubaSteve AUV.
 
-The following is the directory structure of the package:
+The following is the directory structure of the ROS package:
 
-* camera/
-* CMakeLists.txt
-* launch/
-* package.xml
-* README.md
-* scripts/
-* sim/
-* state_machine/
+scuba_steve/
+├── CMakeLists.txt
+├── package.xml
+├── README.md
+├── setup.py
+└── src/
+    └── scuba_steve/
+        ├── camera/
+        ├── launch/
+        ├── sim/
+        └── state_machine/
