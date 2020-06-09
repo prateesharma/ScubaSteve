@@ -47,19 +47,20 @@ class MissionClock:
         return cls.get_minutes()
 
     @classmethod
+    def reset(cls):
+        """Resets the mission clock to zero."""
+        cls._time = time.time()
+
+    @classmethod
     def get_mission_state(cls):
         """Returns the mission state based on the time since the mission clock
         was started.
         """
         time = cls.get_time()
-        state='EXPLORE'
         if (15 <= time < 20) or (35 <= time < 40) or (55 <= time < 60):
             state='COMMS'
         elif time >= 60:
             state='POWERDOWN'            
+        else:
+            state='EXPLORE'
         return state
-
-    @classmethod
-    def reset(cls):
-        """Resets the mission clock to zero."""
-        _time = time.time()

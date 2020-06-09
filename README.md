@@ -10,7 +10,7 @@ scuba_steve/
 ├── setup.py
 └── src/
     └── scuba_steve/
-        ├── camera/
         ├── launch/
         ├── sim/
-        └── state_machine/
+        ├── state_machine/
+        └── transducers/
