@@ -9,11 +9,11 @@ scuba_steve/
 ├── README.md  
 ├── setup.py  
 ├── src/  
-    └── scuba_steve/  
-        ├── launch/  
-        ├── sim/  
-        ├── state_machine/  
-        └── transducers/  
+    └── scuba_steve/  
+        ├── launch/  
+        ├── sim/  
+        ├── state_machine/  
+        └── transducers/  
 └── test/  
-    └── scuba_steve/  
-        └── state_machine/  
+    └── scuba_steve/  
+        └── state_machine/  
