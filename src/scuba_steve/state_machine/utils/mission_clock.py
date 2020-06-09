@@ -13,6 +13,17 @@ class MissionClock:
     _instance = None
     _time = None
 
+    # Default mission schedule
+    _schedule = [
+        ( 0, 15, 'EXPLORE'),
+        (15, 20, 'COMMS'),
+        (20, 35, 'EXPLORE'),
+        (35, 40, 'COMMS'),
+        (40, 55, 'EXPLORE'),
+        (55, 60, 'COMMS'),
+        (60, 90, 'POWERDOWN')
+    ]
+
     def __init__(self):
         """Initializes the mission clock, or does nothing if the class has
         already been initialized.
@@ -52,15 +63,18 @@ class MissionClock:
         cls._time = time.time()
 
     @classmethod
+    def set_mission_schedule(cls, schedule):
+        """Overrides the current (or default) mission schedule."""
+        cls._schedule = schedule
+
+    @classmethod
     def get_mission_state(cls):
         """Returns the mission state based on the time since the mission clock
         was started.
         """
         time = cls.get_time()
-        if (15 <= time < 20) or (35 <= time < 40) or (55 <= time < 60):
-            state='COMMS'
-        elif time >= 60:
-            state='POWERDOWN'            
-        else:
-            state='EXPLORE'
+        state = 'POWERDOWN'
+        for window in cls._schedule:
+            if window[0] <= time < window[1]:
+                state = window[2]
         return state
