@@ -6,6 +6,8 @@
 import rospy
 import smach
 
+from scuba_steve.state_machine.utils.mission_clock import MissionClock
+
 
 class ReleaseState(smach.State):
     """State where the system remains ready until it receives the "release"
@@ -24,5 +26,6 @@ class ReleaseState(smach.State):
         rospy.loginfo("Executing state 'RELEASE'")
 
         # TODO - Remain in this state until the release signal is received
-        # TODO - Start the mission clock
+        # Start the mission clock
+        mc = MissionClock.get_instance()
         return 'outcome1'
