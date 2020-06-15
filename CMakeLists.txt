@@ -9,6 +9,9 @@ project(scuba_steve)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   rospy
+  smach
+  smach_msgs
+  smach_ros
   std_msgs
 )
 
