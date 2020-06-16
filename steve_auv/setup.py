@@ -3,7 +3,7 @@ from distutils.core import setup
 
 
 setup_args = generate_distutils_setup(
-    packages=['scuba_steve'],
+    packages=['steve_auv'],
     package_dir={'': 'src'}
 )
 setup(**setup_args)

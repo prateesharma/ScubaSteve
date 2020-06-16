@@ -1,27 +1,43 @@
 # scuba_steve
-ROS package for the ScubaSteve AUV.
+Scuba Steve ROS packages.
 
-The following is the directory structure of the ROS package:
+The following is the directory structure of the STEVE packages:
 
 ```
 scuba_steve/
-├── CMakeLists.txt
-├── package.xml
+├── .gitignore
 ├── README.md
-├── setup.py
-├── src/
-    └── scuba_steve/
-        ├── __init__.py
-        ├── launch/
+├── steve_arduino/
+    ├── CMakeLists.txt
+    ├── package.xml
+    ├── src/
+    └── test/
+├── steve_auv/
+    ├── CMakeLists.txt
+    ├── launch/
+    ├── nodes/
+    ├── package.xml
+    ├── setup.py
+    ├── src/
         ├── sim/
         ├── state_machine/
             ├── __init__.py
-            ├── nodes/
             ├── state_machine/
             ├── states/
             └── utils/
         └── transducers/
-└── test/
-    └── scuba_steve/
-        └── state_machine/
+    └── test/
+        └──  state_machine/
+├── steve_ground_station/
+    ├── CMakeLists.txt
+    ├── package.xml
+    ├── setup.py
+    ├── src/
+    └── test/
+└── steve_launch_structure/
+    ├── CMakeLists.txt
+    ├── package.xml
+    ├── setup.py
+    ├── src/
+    └── test/
 ```

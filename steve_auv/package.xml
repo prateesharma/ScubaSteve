@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>scuba_steve</name>
+  <name>steve_auv</name>
   <version>0.0.0</version>
-  <description>The scuba_steve package</description>
+  <description>The steve_auv package</description>
   <maintainer email="ntrivelis@gmail.com">Nick</maintainer>
   <license>TODO</license>
 
