@@ -6,8 +6,8 @@
 import rospy
 import smach
 
-from scuba_steve.state_machine.states.powerdown_state import PowerdownState
-from scuba_steve.state_machine.states.surface_state import SurfaceState
+from steve_auv.state_machine.states.powerdown_state import PowerdownState
+from steve_auv.state_machine.states.surface_state import SurfaceState
 
 
 def create_powerdown_sm():

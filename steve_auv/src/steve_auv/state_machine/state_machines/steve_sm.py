@@ -6,13 +6,13 @@
 import rospy
 import smach
 
-from scuba_steve.state_machine.state_machines.powerdown_sm import create_powerdown_sm
-from scuba_steve.state_machine.states.end_state import EndState
-from scuba_steve.state_machine.states.idle_state import IdleState
-from scuba_steve.state_machine.states.powerup_state import PowerupState
-from scuba_steve.state_machine.states.release_state import ReleaseState
-from scuba_steve.state_machine.states.splashdown_state import SplashdownState
-from scuba_steve.state_machine.states.start_state import StartState
+from steve_auv.state_machine.state_machines.powerdown_sm import create_powerdown_sm
+from steve_auv.state_machine.states.end_state import EndState
+from steve_auv.state_machine.states.idle_state import IdleState
+from steve_auv.state_machine.states.powerup_state import PowerupState
+from steve_auv.state_machine.states.release_state import ReleaseState
+from steve_auv.state_machine.states.splashdown_state import SplashdownState
+from steve_auv.state_machine.states.start_state import StartState
 
 
 def create_steve_sm():

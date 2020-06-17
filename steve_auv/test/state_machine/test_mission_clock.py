@@ -6,7 +6,7 @@
 import time
 import unittest
 
-from scuba_steve.state_machine.utils.mission_clock import MissionClock
+from steve_auv.state_machine.utils.mission_clock import MissionClock
 
 
 class TestMissionClock(unittest.TestCase):

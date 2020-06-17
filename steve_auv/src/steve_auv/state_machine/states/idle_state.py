@@ -6,7 +6,7 @@
 import rospy
 import smach
 
-from scuba_steve.state_machine.utils.mission_clock import MissionClock
+from steve_auv.state_machine.utils.mission_clock import MissionClock
 
 
 class IdleState(smach.State):
