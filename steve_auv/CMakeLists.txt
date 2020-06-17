@@ -25,4 +25,4 @@ install(DIRECTORY src
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
-catkin_add_nosetests(test/state_machine/test_mission_clock.py)
+catkin_add_nosetests(test/steve_auv/state_machine/test_mission_clock.py)

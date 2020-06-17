@@ -19,15 +19,17 @@ scuba_steve/
     ├── package.xml
     ├── setup.py
     ├── src/
-        ├── sim/
-        ├── state_machine/
-            ├── __init__.py
+        └── steve_auv/
+            ├── sim/
             ├── state_machine/
-            ├── states/
-            └── utils/
-        └── transducers/
+                ├── __init__.py
+                ├── state_machine/
+                ├── states/
+                └── utils/
+            └── transducers/
     └── test/
-        └──  state_machine/
+        └── steve_auv/
+            └── state_machine/
 ├── steve_ground_station/
     ├── CMakeLists.txt
     ├── package.xml
