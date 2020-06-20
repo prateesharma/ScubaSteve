@@ -20,7 +20,7 @@ def main():
     # Execute the state machine plan
     rospy.loginfo("Executing state machine 'STEVE'")
     outcome = sm.execute()
-
+    rospy.spin()
 
 if __name__ == '__main__':
     main()
