@@ -17,7 +17,7 @@ class SplashdownState(smach.State):
 
     Outcomes:
         succeeded: 'LOCALIZE'
-        failed:    'POWERDOWN'
+        failed:    'TERMINATE'
     """
     def __init__(self):
         smach.State.__init__(self, outcomes=['succeeded', 'failed'])

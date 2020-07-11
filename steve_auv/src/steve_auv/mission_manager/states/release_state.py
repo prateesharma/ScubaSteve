@@ -6,8 +6,9 @@
 import rospy
 import smach
 import std_msgs
+import steve_auv.mission_manager as mm
 
-from steve_auv.mission_manager.utils.mission_clock import MissionClock
+from mm.utils.mission_clock import MissionClock
 
 
 class ReleaseState(smach.State):
@@ -19,7 +20,7 @@ class ReleaseState(smach.State):
 
     Outcomes:
         succeeded:   'SPLASHDOWN'
-        failed:      'END'
+        failed:      'TERMINATE'
     """
     def __init__(self):
         smach.State.__init__(self, outcomes=['succeeded', 'failed'])

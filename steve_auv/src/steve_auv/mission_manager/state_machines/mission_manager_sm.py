@@ -5,16 +5,17 @@
 
 import rospy
 import smach
+import steve_auv.mission_manager as mm
 
-from steve_auv.mission_manager.state_machines.powerdown_sm import create_powerdown_sm
-from steve_auv.mission_manager.states.end_state import EndState
-from steve_auv.mission_manager.states.idle_state import IdleState
-from steve_auv.mission_manager.states.localize_state import LocalizeState
-from steve_auv.mission_manager.states.powerdown_state import PowerdownState
-from steve_auv.mission_manager.states.powerup_state import PowerupState
-from steve_auv.mission_manager.states.release_state import ReleaseState
-from steve_auv.mission_manager.states.splashdown_state import SplashdownState
-from steve_auv.mission_manager.states.start_state import StartState
+from mm.state_machines.powerdown_sm import build_powerdown_sm
+from mm.states.end_state import EndState
+from mm.states.idle_state import IdleState
+from mm.states.localize_state import LocalizeState
+from mm.states.powerdown_state import PowerdownState
+from mm.states.powerup_state import PowerupState
+from mm.states.release_state import ReleaseState
+from mm.states.splashdown_state import SplashdownState
+from mm.states.start_state import StartState
 
 
 def build_steve_sm():
@@ -60,7 +61,7 @@ def build_steve_sm():
         )
         smach.StateMachine.add(
             'TERMINATE',
-            PowerdownState(),
+            PowerdownState(name='TERMINATE'),
             transitions={'succeeded':'END'}
         )
         smach.StateMachine.add(

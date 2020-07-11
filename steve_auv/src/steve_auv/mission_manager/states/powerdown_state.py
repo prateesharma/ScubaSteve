@@ -13,14 +13,15 @@ class PowerdownState(smach.State):
     State: 'POWERDOWN'
 
     Outcomes:
-        outcome1: 'END'
+        succeeded: 'END'
     """
-    def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1'])
+    def __init__(self, name='POWERDOWN'):
+        smach.State.__init__(self, outcomes=['succeeded'])
+        self.name = name
 
     def execute(self, userdata):
-        rospy.loginfo("Executing state 'POWERDOWN'")
+        rospy.loginfo(f"Executing state '{self.name}'")
 
         # TODO - Save data
         # TODO - Kill processes
-        return 'outcome1'
+        return 'succeeded'

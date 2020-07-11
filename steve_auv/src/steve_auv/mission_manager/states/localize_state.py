@@ -15,7 +15,7 @@ class LocalizeState(smach.State):
 
     Outcomes:
         succeeded: 'IDLE'
-        failed:    'POWERDOWN'
+        failed:    'TERMINATE'
     """
     def __init__(self):
         smach.State.__init__(self, outcomes=['succeeded', 'failed'])
