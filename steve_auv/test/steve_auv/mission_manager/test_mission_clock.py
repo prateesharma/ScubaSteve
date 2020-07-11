@@ -3,13 +3,15 @@
 # TDC Team #2, Scuba Squad         #
 ####################################
 
+import steve_auv.mission_manager as mm
 import time
 import unittest
 
-from steve_auv.state_machine.utils.mission_clock import MissionClock
+from mm.utils.mission_clock import MissionClock
 
 
 class TestMissionClock(unittest.TestCase):
+
     def setUp(self):
         self.mc = MissionClock.get_instance()
         self.mc.reset()
