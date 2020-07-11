@@ -13,13 +13,13 @@ class PowerupState(smach.State):
     State: 'POWERUP'
 
     Outcomes:
-        outcome1: 'RELEASE'
+        succeeded: 'RELEASE'
     """
     def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1'])
+        smach.State.__init__(self, outcomes=['succeeded'])
 
     def execute(self, userdata):
-        rospy.loginfo("Executing state 'POWERUP'")
+        rospy.loginfo(f"Executing state 'POWERUP'")
 
         # TODO - Startup and initialization processes should be executed here
-        return 'outcome1'
+        return 'succeeded'

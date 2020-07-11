@@ -6,7 +6,7 @@
 import rospy
 import smach
 
-from steve_auv.state_machine.utils.mission_clock import MissionClock
+from steve_auv.mission_manager.utils.mission_clock import MissionClock
 
 
 class IdleState(smach.State):
@@ -16,22 +16,26 @@ class IdleState(smach.State):
     State: 'IDLE'
 
     Outcomes:
-        outcome1: 'POWERDOWN'
+        explore:     'EXPLORE'
+        comms:       'COMMS'
+        mission_end: 'POWERDOWN'
     """
     def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1'])
+        smach.State.__init__(self, outcomes=['explore', 'comms', 'mission_end'])
 
     def execute(self, userdata):
-        rospy.loginfo("Executing state 'IDLE'")
+        rospy.loginfo(f"Executing state 'IDLE'")
 
         # Reference the mission clock against the mission schedule to determine
         # the next state
         mc = MissionClock.get_instance()
         state = mc.get_mission_state()
-        # TODO - Hard code 'outcome1' until other states are added
         if state == 'EXPLORE':
-            return 'outcome1'
+            return 'explore'
         elif state == 'COMMS':
-            return 'outcome1'
+            return 'comms'
+        elif state == 'POWERDOWN':
+            return 'powerdown'
         else:
-            return 'outcome1'
+            rospy.logerr(f"Unrecognized: failure, powering down")
+            return 'powerdown'
