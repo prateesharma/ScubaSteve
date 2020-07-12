@@ -11,9 +11,8 @@ find_package(catkin REQUIRED COMPONENTS
   std_msgs
 )
 add_action_files(DIRECTORY action FILES
-  Localize.action
-  Release.action
-  Splashdown.action
+  Comms.action
+  Gnc.action
 )
 generate_messages(DEPENDENCIES actionlib_msgs)
 

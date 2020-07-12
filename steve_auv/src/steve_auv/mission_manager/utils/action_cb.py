@@ -5,18 +5,13 @@
 
 import actionlib
 import rospy
-import steve_auv.mission_manager as mm
-
-from mm.utils.mission_clock import MissionClock
 
 
-def release_cb(userdata, status, result):
-    """Handles logging and flags for the release state."""
+def action_cb(userdata, status, result):
+    """Handles logging and flags for action states."""
     # If received, continue
     if status == actionlib.GoalStatus.SUCCEEDED:
-        rospy.loginfo(f"Received signal: starting clock and continuing")
-        mc = MissionClock.get_instance()
-        mc.reset()
+        rospy.loginfo(f"Received signal: continuing")
         return 'succeeded'
     else:
         rospy.logerr(f"Goal timed out: failure, powering down")

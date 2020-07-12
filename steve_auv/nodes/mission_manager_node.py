@@ -16,16 +16,11 @@ def main():
     rospy.init_node('mission_manager')
 
     # Access topics from the parameter server
-    release_topic = rospy.get_param('~release_topic')
-    splashdown_topic = rospy.get_param('~splashdown_topic')
-    localize_topic = rospy.get_param('~localize_topic')
+    comms_topic = rospy.get_param('~comms_topic')
+    gnc_topic = rospy.get_param('~gnc_topic')
 
     # Create the state machine
-    sm = build_mission_manager_sm(
-             release_topic,
-             splashdown_topic,
-             localize_topic
-         )
+    sm = build_mission_manager_sm(comms_topic, gnc_topic)
 
     # Execute the state machine plan
     rospy.loginfo(f"Executing mission manager")

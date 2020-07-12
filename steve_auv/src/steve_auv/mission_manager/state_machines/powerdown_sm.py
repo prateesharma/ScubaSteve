@@ -12,6 +12,7 @@ from mm.states.surface_state import SurfaceState
 
 
 def build_powerdown_sm():
+    """Builds the state machine for the powerdown sequence."""
     rospy.loginfo(f"Building 'POWERDOWN' state machine")
 
     # Add states to the state machine
@@ -19,7 +20,14 @@ def build_powerdown_sm():
     with sm:
         smach.StateMachine.add(
             'SURFACE',
-            SurfaceState(),
+            SimpleActionState(
+                gnc_topic,
+                GncAction,
+                goal=GncGoal('surface'),
+                result_cb=action_cb,
+                exec_timeout=rospy.Duration(60.0),
+                server_wait_timeout=rospy.Duration(10.0)
+            ),
             transitions={'succeeded':'POWERDOWN', failed:'POWERDOWN'}
         )
         smach.StateMachine.add(

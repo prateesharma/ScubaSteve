@@ -10,23 +10,20 @@ import steve_auv.mission_manager as mm
 from mm.state_machines.powerdown_sm import build_powerdown_sm
 from mm.states.end_state import EndState
 from mm.states.idle_state import IdleState
-from mm.states.localize_state import LocalizeState
 from mm.states.powerdown_state import PowerdownState
 from mm.states.powerup_state import PowerupState
-from mm.states.release_state import ReleaseState
-from mm.states.splashdown_state import SplashdownState
+from mm.states.release_state import release_cb
 from mm.states.start_state import StartState
+from mm.utils import action_cb
+from steve_auv.msg import CommsAction, CommsGoal, GncAction, GncGoal
 
 
-def build_mission_manager_sm(release_topic, splashdown_topic, localize_topic):
+def build_mission_manager_sm(comms_topic, gnc_topic):
     rospy.loginfo(f"Building mission manager state machine")
 
     # Create a state machine and add userdata fields
     sm = smach.StateMachine(outcomes=['succeeded', 'failed'])
     sm.userdata.is_failed = False
-    sm.userdata.release_topic = release_topic
-    sm.userdata.splashdown_topic = splashdown_topic
-    sm.userdata.localize_topic = localize_topic
 
     # Add states to the empty state machine
     with sm:
@@ -42,17 +39,38 @@ def build_mission_manager_sm(release_topic, splashdown_topic, localize_topic):
         )
         smach.StateMachine.add(
             'RELEASE',
-            ReleaseState(),
+            SimpleActionState(
+                comms_topic,
+                CommsAction,
+                goal=CommsGoal('release'),
+                result_cb=release_cb,
+                exec_timeout=rospy.Duration(1800.0),
+                server_wait_timeout=rospy.Duration(10.0)
+            ),
             transitions={'suceeded':'SPLASHDOWN', 'failed':'TERMINATE'}
         )
         smach.StateMachine.add(
             'SPLASHDOWN',
-            SplashdownState(),
+            SimpleActionState(
+                gnc_topic,
+                GncAction,
+                goal=GncGoal('splashdown'),
+                result_cb=action_cb,
+                exec_timeout=rospy.Duration(60.0),
+                server_wait_timeout=rospy.Duration(10.0)
+            ),
             transitions={'succeeded':'LOCALIZE', 'failed':'TERMINATE'}
         )
         smach.StateMachine.add(
             'LOCALIZE',
-            LocalizeState(),
+            SimpleActionState(
+                gnc_topic,
+                GncAction,
+                goal=GncGoal('localize'),
+                result_cb=action_cb,
+                exec_timeout=rospy.Duration(300.0),
+                server_wait_timeout=rospy.Duration(10.0)
+            ),
             transitions={'succeeded':'IDLE', 'failed':'TERMINATE'}
         )
         smach.StateMachine.add(
@@ -67,7 +85,7 @@ def build_mission_manager_sm(release_topic, splashdown_topic, localize_topic):
         )
         smach.StateMachine.add(
             'POWERDOWN',
-            create_powerdown_sm(),
+            build_powerdown_sm(),
             transitions={'succeeded':'END'}
         )
         smach.StateMachine.add(
