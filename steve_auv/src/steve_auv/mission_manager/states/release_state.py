@@ -3,12 +3,13 @@
 # TDC Team #2, Scuba Squad         #
 ####################################
 
+import actionlib
 import rospy
 import smach
-import std_msgs
 import steve_auv.mission_manager as mm
 
 from mm.utils.mission_clock import MissionClock
+from steve_auv.msg import ReleaseAction, ReleaseGoal
 
 
 class ReleaseState(smach.State):
@@ -25,33 +26,34 @@ class ReleaseState(smach.State):
     def __init__(self):
         smach.State.__init__(self, outcomes=['succeeded', 'failed'])
         self.is_released = False
-        self.timeout = 1800  # seconds until timeout
+        self.timeout = rospy.Duration(1800)  # seconds until timeout
 
     def execute(self, userdata):
         rospy.loginfo(f"Executing state 'RELEASE'")
 
-        # Subscribe to the comms module for the release topic
-        def release_cb(msg):
-            self.is_released = msg.data
+        # Set up a client and connect to the action server
+        client = actionlib.SimpleActionClient(
+                     userdata.topics.release,
+                     ReleaseAction
+                 )
+        connect = client.wait_for_server()
+        if not connect:
+            rospy.logerr(f"Release server timeout: failure, powering down")
+            userdata.is_failed = True
+            return 'failed'
 
-        rospy.Subscriber(
-            userdata.topics.release,
-            std_msgs.msg.Bool,
-            release_cb
-        )
+        # Wait until the release signal is received
+        goal = ReleaseGoal()
+        client.send_goal(goal)
+        result = client.wait_for_result(self.timeout)
 
-        # Remain in this state until the release signal is received
-        for t in range(self.timeout):
-            # If received, start the mission clock
-            if self.is_released:
-                rospy.loginfo(f"Received release signal: starting clock")
-                mc = MissionClock.get_instance()
-                mc.reset()
-                return 'succeeded'
-            else:
-                rospy.sleep(1)
-        
-        # Return a failure after the timeout
-        rospy.logerr(f"Release timeout: failure, powering down")
-        userdata.is_failed = True
-        return 'failed'
+        # If received, start the mission clock and continue
+        if result:
+            rospy.loginfo(f"Received release signal: starting clock")
+            mc = MissionClock.get_instance()
+            mc.reset()
+            return 'succeeded'
+        else:
+            rospy.logerr(f"Release goal timeout: failure, powering down")
+            userdata.is_failed = True
+            return 'failed'

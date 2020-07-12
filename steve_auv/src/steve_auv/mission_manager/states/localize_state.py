@@ -3,8 +3,11 @@
 # TDC Team #2, Scuba Squad         #
 ####################################
 
+import actionlib
 import rospy
 import smach
+
+from steve_auv.msg import LocalizeAction, LocalizeGoal
 
 
 class LocalizeState(smach.State):
@@ -25,26 +28,27 @@ class LocalizeState(smach.State):
     def execute(self, userdata):
         rospy.loginfo(f"Executing state 'LOCALIZE'")
 
-        # Subscribe to the GN&C module for the localize topic
-        def localize_cb(msg):
-            self.is_localized = msg.data
+        # Set up a client and connect to the action server
+        client = actionlib.SimpleActionClient(
+                     userdata.topics.localize,
+                     LocalizeAction
+                 )
+        connect = client.wait_for_server()
+        if not connect:
+            rospy.logerr(f"Localize server timeout: failure, powering down")
+            userdata.is_failed = True
+            return 'failed'
 
-        rospy.Subscriber(
-            userdata.topics.localize,
-            std_msgs.msg.Bool,
-            localize_cb
-        )
+        # Wait until the localize signal is received
+        goal = LocalizeGoal()
+        client.send_goal(goal)
+        result = client.wait_for_result(self.timeout)
 
-        # Remain in this state until the localize signal is received
-        for t in range(self.timeout):
-            # If received, continue
-            if self.is_localized:
-                rospy.loginfo(f"Received localize signal: continuing")
-                return 'succeeded'
-            else:
-                rospy.sleep(1)
-
-        # Return a failure after the timeout
-        rospy.logerr(f"Localize timeout: failure, powering down")
-        userdata.is_failed = True
-        return 'failed'
+        # If received, continue
+        if result:
+            rospy.loginfo(f"Received localize signal: continuing")
+            return 'succeeded'
+        else:
+            rospy.logerr(f"Localize goal timeout: failure, powering down")
+            userdata.is_failed = True
+            return 'failed'

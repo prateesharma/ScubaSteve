@@ -2,12 +2,20 @@ cmake_minimum_required(VERSION 3.0.2)
 project(steve_auv)
 
 find_package(catkin REQUIRED COMPONENTS
+  actionib
+  actionlib_msgs
   rospy
   smach
   smach_msgs
   smach_ros
   std_msgs
 )
+add_action_files(DIRECTORY action FILES
+  Localize.action
+  Release.action
+  Splashdown.action
+)
+generate_messages(DEPENDENCIES actionlib_msgs)
 
 catkin_python_setup()
 catkin_package(DEPENDS)

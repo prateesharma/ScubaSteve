@@ -3,9 +3,11 @@
 # TDC Team #2, Scuba Squad         #
 ####################################
 
+import actionlib
 import rospy
 import smach
-import std_msgs
+
+from steve_auv.msg import SplashdownAction, SplashdownGoal
 
 
 class SplashdownState(smach.State):
@@ -27,26 +29,27 @@ class SplashdownState(smach.State):
     def execute(self, userdata):
         rospy.loginfo(f"Executing state 'SPLASHDOWN'")
 
-        # Subscribe to the GN&C module for the splashdown topic
-        def splashdown_cb(msg):
-            self.is_splashdown = msg.data
+        # Set up a client and connect to the action server
+        client = actionlib.SimpleActionClient(
+                     userdata.topics.splashdown,
+                     SplashdownAction
+                 )
+        connect = client.wait_for_server()
+        if not connect:
+            rospy.logerr(f"Splashdown server timeout: failure, powering down")
+            userdata.is_failed = True
+            return 'failed'
 
-        rospy.Subscriber(
-            userdata.topics.splashdown,
-            std_msgs.msg.Bool,
-            splashdown_cb
-        )
+        # Wait until the splashdown signal is received
+        goal = SplashdownGoal()
+        client.send_goal(goal)
+        result = client.wait_for_result(self.timeout)
 
-        # Remain in this state until the splashdown signal is received
-        for t in range(self.timeout):
-            # If received, continue
-            if self.is_splashdown:
-                rospy.loginfo(f"Received splashdown signal: continuing")
-                return 'succeeded'
-            else:
-                rospy.sleep(1)
-
-        # Return a failure after the timeout
-        rospy.logerr(f"Splashdown timeout: failure, powering down")
-        userdata.is_failed = True
-        return 'failed'
+        # If received, continue
+        if result:
+            rospy.loginfo(f"Received splashdown signal: continuing")
+            return 'succeeded'
+        else:
+            rospy.logerr(f"Splashdown goal timeout: failure, powering down")
+            userdata.is_failed = True
+            return 'failed'
