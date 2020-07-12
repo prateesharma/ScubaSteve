@@ -18,8 +18,8 @@ from mm.states.splashdown_state import SplashdownState
 from mm.states.start_state import StartState
 
 
-def build_steve_sm():
-    rospy.loginfo(f"Building state machine 'STEVE'")
+def build_mission_manager_sm():
+    rospy.loginfo(f"Building mission manager state machine")
 
     # Add states to an empty state machine
     sm = smach.StateMachine(outcomes=['suceeded', 'failed'])

@@ -1,3 +1,3 @@
 <launch>
-    <node name="steve_sm_node" pkg="scuba_steve" type="steve_sm_node"/>
+    <node name="mission_manager_node" pkg="scuba_steve" type="mission_manager_node"/>
 </launch>

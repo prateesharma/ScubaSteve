@@ -7,18 +7,19 @@
 
 import rospy
 import smach
+import scuba_steve.mission_manager as mm
 
-from scuba_steve.state_machine.state_machines.steve_sm import create_steve_sm
+from mm.state_machines.mission_manager_sm import build_mission_manager_sm
 
 
 def main():
-    rospy.init_node('steve_sm')
+    rospy.init_node('mission_manager')
 
     # Create the state machine
-    sm = create_steve_sm()
+    sm = build_mission_manager_sm()
 
     # Execute the state machine plan
-    rospy.loginfo("Executing state machine 'STEVE'")
+    rospy.loginfo(f"Executing mission manager")
     outcome = sm.execute()
     rospy.spin()
 
