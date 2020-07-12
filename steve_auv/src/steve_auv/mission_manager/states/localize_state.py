@@ -46,4 +46,5 @@ class LocalizeState(smach.State):
 
         # Return a failure after the timeout
         rospy.logerr(f"Localize timeout: failure, powering down")
+        userdata.is_failed = True
         return 'failed'

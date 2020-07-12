@@ -13,14 +13,15 @@ class SurfaceState(smach.State):
     State: 'SURFACE'
 
     Outcomes:
-        outcome1: next state
+        succeeded: 'IDLE'
+        failed:    'POWERDOWN'
     """
     def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1'])
+        smach.State.__init__(self, outcomes=['succeeded', 'failed'])
 
     def execute(self, userdata):
         rospy.loginfo("Executing state 'SURFACE'")
 
         # TODO - Read from the 'GN&C' node to determine when the vehicle is
         #        surfaced
-        return 'outcome1'
+        return 'succeeded'

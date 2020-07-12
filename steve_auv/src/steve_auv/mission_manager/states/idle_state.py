@@ -22,7 +22,10 @@ class IdleState(smach.State):
         mission_end: 'POWERDOWN'
     """
     def __init__(self):
-        smach.State.__init__(self, outcomes=['explore', 'comms', 'powerdown'])
+        smach.State.__init__(
+            self,
+            outcomes=['explore', 'comms', 'powerdown', 'failed']
+        )
 
     def execute(self, userdata):
         rospy.loginfo(f"Executing state 'IDLE'")
@@ -39,4 +42,5 @@ class IdleState(smach.State):
             return 'powerdown'
         else:
             rospy.logerr(f"Unrecognized state: failure, powering down")
-            return 'powerdown'
+            userdata.is_failed = True
+            return 'failed'

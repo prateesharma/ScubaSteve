@@ -13,13 +13,17 @@ class EndState(smach.State):
     State: 'END'
 
     Outcomes:
-        outcome1: Final state machine transition
+        suceeded: The state machine completed successfully
+        failed:   The state machine failed
     """
     def __init__(self):
-        smach.State.__init__(self, outcomes=['outcome1'])
+        smach.State.__init__(self, outcomes=['succeeded', 'failed'])
 
     def execute(self, userdata):
         rospy.loginfo("Executing state 'END'")
 
         # TODO - Engage kill switch
-        return 'outcome1'
+        if userdata.is_failed
+            return 'failed'
+        else:
+            return 'succeeded'

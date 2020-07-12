@@ -13,11 +13,11 @@ class StartState(smach.State):
     State: 'START'
 
     Outcomes:
-        suceeded: 'POWERUP'
+        succeeded: 'POWERUP'
     """
     def __init__(self):
-        smach.State.__init__(self, outcomes=['suceeded'])
+        smach.State.__init__(self, outcomes=['succeeded'])
 
     def execute(self, userdata):
         rospy.loginfo(f"Executing state 'START'")
-        return 'suceeded'
+        return 'succeeded'

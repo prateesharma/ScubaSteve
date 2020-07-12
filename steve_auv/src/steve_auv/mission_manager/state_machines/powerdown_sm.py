@@ -5,25 +5,26 @@
 
 import rospy
 import smach
+import steve_auv.mission_manager as mm
 
-from steve_auv.state_machine.states.powerdown_state import PowerdownState
-from steve_auv.state_machine.states.surface_state import SurfaceState
+from mm.states.powerdown_state import PowerdownState
+from mm.states.surface_state import SurfaceState
 
 
-def create_powerdown_sm():
-    rospy.loginfo(f"Building state machine 'POWERDOWN'")
+def build_powerdown_sm():
+    rospy.loginfo(f"Building 'POWERDOWN' state machine")
 
     # Add states to the state machine
-    sm = smach.StateMachine(outcomes=['outcome_sm'])
+    sm = smach.StateMachine(outcomes=['succeeded'])
     with sm:
         smach.StateMachine.add(
             'SURFACE',
             SurfaceState(),
-            transitions={'outcome1':'POWERDOWN'}
+            transitions={'succeeded':'POWERDOWN', failed:'POWERDOWN'}
         )
         smach.StateMachine.add(
             'POWERDOWN',
             PowerdownState(),
-            transitions={'outcome1':'outcome_sm'}
+            transitions={'succeeded':'succeeded'}
         )
     return sm

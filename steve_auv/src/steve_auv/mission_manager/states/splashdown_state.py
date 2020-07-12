@@ -48,4 +48,5 @@ class SplashdownState(smach.State):
 
         # Return a failure after the timeout
         rospy.logerr(f"Splashdown timeout: failure, powering down")
+        userdata.is_failed = True
         return 'failed'

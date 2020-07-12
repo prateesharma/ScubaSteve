@@ -1,3 +1,7 @@
 <launch>
-    <node name="mission_manager_node" pkg="scuba_steve" type="mission_manager_node"/>
+    <node name="mission_manager_node" pkg="steve_auv" type="mission_manager_node">
+        <param name="release_topic" value="/steve_auv/comms/release"/>
+        <param name="splashdown_topic" value="/steve_auv/gnc/splashdown"/>
+        <param name="localize_topic" value="/steve_auv/gnc/localize"/>
+    </node>
 </launch>

@@ -18,11 +18,17 @@ from mm.states.splashdown_state import SplashdownState
 from mm.states.start_state import StartState
 
 
-def build_mission_manager_sm():
+def build_mission_manager_sm(release_topic, splashdown_topic, localize_topic):
     rospy.loginfo(f"Building mission manager state machine")
 
-    # Add states to an empty state machine
-    sm = smach.StateMachine(outcomes=['suceeded', 'failed'])
+    # Create a state machine and add userdata fields
+    sm = smach.StateMachine(outcomes=['succeeded', 'failed'])
+    sm.userdata.is_failed = False
+    sm.userdata.release_topic = release_topic
+    sm.userdata.splashdown_topic = splashdown_topic
+    sm.userdata.localize_topic = localize_topic
+
+    # Add states to the empty state machine
     with sm:
         smach.StateMachine.add(
             'START',
@@ -32,7 +38,7 @@ def build_mission_manager_sm():
         smach.StateMachine.add(
             'POWERUP',
             PowerupState(),
-            transitions={'succeeded':'RELEASE'}
+            transitions={'succeeded':'RELEASE', 'failed':'TERMINATE'}
         )
         smach.StateMachine.add(
             'RELEASE',
@@ -52,7 +58,12 @@ def build_mission_manager_sm():
         smach.StateMachine.add(
             'IDLE',
             IdleState(),
-            transitions={'explore':'EXPLORE', 'comms':'COMMS', 'powerdown':'POWERDOWN'}
+            transitions={
+                'explore':'EXPLORE',
+                'comms':'COMMS',
+                'powerdown':'POWERDOWN',
+                'failed':'POWERDOWN'
+            }
         )
         smach.StateMachine.add(
             'POWERDOWN',
@@ -67,6 +78,6 @@ def build_mission_manager_sm():
         smach.StateMachine.add(
             'END',
             EndState(),
-            transitions={'succeeded':'succeeded'}
+            transitions={'succeeded':'succeeded', 'failed':'failed'}
         )
     return sm
