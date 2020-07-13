@@ -84,6 +84,11 @@ def build_mission_manager_sm(comms_topic, gnc_topic):
             }
         )
         smach.StateMachine.add(
+            'EXPLORE',
+            build_explore_sm(),
+            transitions={'succeeded':'IDLE'}
+        )
+        smach.StateMachine.add(
             'POWERDOWN',
             build_powerdown_sm(),
             transitions={'succeeded':'END'}
