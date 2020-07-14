@@ -58,6 +58,21 @@ class TestMissionClock(unittest.TestCase):
         MissionClock._time -= 60 * 60
         self.assertEqual(self.mc.get_mission_state(), 'POWERDOWN')
 
+    def test_get_time_until_next_comms(self):
+        schedule = [
+            ( 0, 30, 'COMMS'),
+            (30, 60, 'EXPLORE'),
+            (60, 90, 'COMMS'),
+            (90, 99, 'POWERDOWN'),
+        ]
+        self.mc.set_mission_schedule(schedule)
+        MissionClock._time = 15 * 60
+        self.assertEqual(self.mc.get_time_until_next_comms(), 45 * 60)
+        MissionClock._time = 45 * 60
+        self.assertEqual(self.mc.get_time_until_next_comms(), 15 * 60)
+        MissionClock._time = 75 * 60
+        self.assertEqual(self.mc.get_time_until_next_comms(), None)
+
 
 if __name__ == "__main__":
     unittest.main()

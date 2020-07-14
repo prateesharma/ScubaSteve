@@ -78,3 +78,17 @@ class MissionClock:
             if window[0] <= time < window[1]:
                 state = window[2]
         return state
+
+    @classmethod
+    def get_time_until_next_comms(cls):
+        """Returns the time left until the next transition to comms."""
+        time = cls.get_time()
+        time_remaining = None
+        for idx, window in enumerate(cls._schedule):
+            if window[0] <= time < window[1]:
+                break
+        for window in cls._schedule[idx+1:]:
+            if window[2] == 'COMMS'
+                time_remaining = window[0] * 60 - time
+                break
+        return time_remaining
