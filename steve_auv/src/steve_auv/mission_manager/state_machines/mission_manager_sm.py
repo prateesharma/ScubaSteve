@@ -7,6 +7,8 @@ import rospy
 import smach
 import steve_auv.mission_manager as mm
 
+from mm.state_machines.comms_sm import build_comms_sm
+from mm.state_machines.explore_sm import build_explore_sm
 from mm.state_machines.powerdown_sm import build_powerdown_sm
 from mm.states.end_state import EndState
 from mm.states.idle_state import IdleState
@@ -86,7 +88,12 @@ def build_mission_manager_sm(comms_topic, gnc_topic):
         smach.StateMachine.add(
             'EXPLORE',
             build_explore_sm(),
-            transitions={'succeeded':'IDLE'}
+            transitions={'succeeded':'IDLE', 'failed':'POWERDOWN'}
+        )
+        smach.StateMachine.add(
+            'COMMS',
+            build_comms_sm(),
+            transitions={'succeeded':'IDLE', 'failed':'POWERDOWN'}
         )
         smach.StateMachine.add(
             'POWERDOWN',
