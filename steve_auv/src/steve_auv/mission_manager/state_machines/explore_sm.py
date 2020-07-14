@@ -29,12 +29,17 @@ def build_explore_sm():
         )
         smach.StateMachine.add(
             'EXPLORE',
+            ExploreState(),
+            transitions={'succeeded':'SURFACE', 'preempted':'SURFACE', 'failed':'SURFACE'}
+        )
+        smach.StateMachine.add(
+            'SURFACE',
             SimpleActionState(
                 gnc_topic,
                 GncAction,
-                goal=GncGoal('explore'),
+                goal=GncGoal('surface'),
                 result_cb=action_cb,
-                exec_timeout=None,
+                exec_timeout=rospy.Duration(60.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
             transitions={'succeeded':'succeeded', 'failed':'failed'}
