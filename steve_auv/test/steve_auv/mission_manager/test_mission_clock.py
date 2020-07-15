@@ -20,6 +20,25 @@ class TestMissionClock(unittest.TestCase):
         mc_instance = MissionClock.get_instance()
         self.assertEqual(self.mc, mc_instance)
 
+    def test_set_mission_schedule(self):
+        schedule = [
+            ( 0, 'POWERDOWN'),
+            (30, 'COMMS'),
+            (60, 'EXPLORE')
+        ]
+        self.mc.set_mission_schedule(schedule)
+        self.assertEqual(self.mc.get_mission_state(), 'POWERDOWN')
+
+    def test_next_state(self):
+        self.assertEqual(self.mc._current_state, 0)
+        self.mc.next_state()
+        self.assertEqual(self.mc._current_state, 1)
+
+    def test_reset(self):
+        time.sleep(3.0)
+        self.mc.reset()
+        self.assertAlmostEqual(self.mc.get_time(), 0.00, 2)
+
     def test_get_minutes(self):
         time.sleep(3.0)
         self.assertAlmostEqual(self.mc.get_minutes(), 0.05, 2)
@@ -32,45 +51,22 @@ class TestMissionClock(unittest.TestCase):
         time.sleep(3.0)
         self.assertAlmostEqual(self.mc.get_time(), 0.05, 2)
 
-    def test_reset(self):
-        time.sleep(3.0)
-        self.mc.reset()
-        self.assertAlmostEqual(self.mc.get_time(), 0.00, 2)
+    def test_get_mission_state(self):
+        self.mc._current_state = 3
+        self.assertEqual(self.mc.get_mission_state(), 3)
 
-    def test_set_mission_schedule(self):
+    def test_get_time_until_next_state(self):
         schedule = [
-            ( 0, 30, 'POWERDOWN'),
-            (30, 60, 'COMMS'),
-            (60, 90, 'EXPLORE')
-        ]
-        self.mc.set_mission_schedule(schedule)
-        self.assertEqual(self.mc.get_mission_state(), 'POWERDOWN')
-
-    def test_get_mission_state_explore(self):
-        MissionClock._time -= 1 * 60
-        self.assertEqual(self.mc.get_mission_state(), 'EXPLORE')
-
-    def test_get_mission_state_comms(self):
-        MissionClock._time -= 15 * 60
-        self.assertEqual(self.mc.get_mission_state(), 'COMMS')
-
-    def test_get_mission_state_powerdown(self):
-        MissionClock._time -= 60 * 60
-        self.assertEqual(self.mc.get_mission_state(), 'POWERDOWN')
-
-    def test_get_time_until_next_comms(self):
-        schedule = [
-            ( 0, 30, 'COMMS'),
-            (30, 60, 'EXPLORE'),
-            (60, 90, 'COMMS'),
-            (90, 99, 'POWERDOWN'),
+            ( 0, 'COMMS'),
+            (30, 'EXPLORE'),
+            (60, 'POWERDOWN'),
         ]
         self.mc.set_mission_schedule(schedule)
         MissionClock._time = 15 * 60
+        self.assertEqual(self.mc.get_time_until_next_state(), 15 * 60)
+        MissionClock.next_state()
         self.assertEqual(self.mc.get_time_until_next_comms(), 45 * 60)
-        MissionClock._time = 45 * 60
-        self.assertEqual(self.mc.get_time_until_next_comms(), 15 * 60)
-        MissionClock._time = 75 * 60
+        MissionClock.next_state()
         self.assertEqual(self.mc.get_time_until_next_comms(), None)
 
 

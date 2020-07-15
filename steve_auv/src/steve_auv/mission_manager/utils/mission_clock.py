@@ -14,14 +14,15 @@ class MissionClock:
     _time = None
 
     # Default mission schedule
+    _current_state = 0
     _schedule = [
-        ( 0, 15, 'EXPLORE'),
-        (15, 20, 'COMMS'),
-        (20, 35, 'EXPLORE'),
-        (35, 40, 'COMMS'),
-        (40, 55, 'EXPLORE'),
-        (55, 60, 'COMMS'),
-        (60, 90, 'POWERDOWN')
+        ( 0, 'EXPLORE'),
+        (15, 'COMMS'),
+        (20, 'EXPLORE'),
+        (35, 'COMMS'),
+        (40, 'EXPLORE'),
+        (55, 'COMMS'),
+        (60, 'POWERDOWN')
     ]
 
     def __init__(self):
@@ -43,6 +44,22 @@ class MissionClock:
         return MissionClock._instance
 
     @classmethod
+    def set_mission_schedule(cls, schedule):
+        """Overrides the current (or default) mission schedule."""
+        cls._schedule = schedule
+
+    @classmethod
+    def next_state(cls):
+        """Transition to the next state."""
+        self._current_state += 1
+
+    @classmethod
+    def reset(cls):
+        """Resets the mission clock to zero."""
+        cls._time = time.time()
+        cls._current_state = 0
+
+    @classmethod
     def get_minutes(cls):
         """Returns the time since the mission clock was started in minutes."""
         return (time.time() - cls._time) / 60
@@ -58,37 +75,14 @@ class MissionClock:
         return cls.get_minutes()
 
     @classmethod
-    def reset(cls):
-        """Resets the mission clock to zero."""
-        cls._time = time.time()
-
-    @classmethod
-    def set_mission_schedule(cls, schedule):
-        """Overrides the current (or default) mission schedule."""
-        cls._schedule = schedule
-
-    @classmethod
     def get_mission_state(cls):
-        """Returns the mission state based on the time since the mission clock
-        was started.
-        """
-        time = cls.get_time()
-        state = 'POWERDOWN'
-        for window in cls._schedule:
-            if window[0] <= time < window[1]:
-                state = window[2]
-        return state
+        """Returns the mission state."""
+        return cls._schedule[cls._current_state][1]
 
     @classmethod
-    def get_time_until_next_comms(cls):
-        """Returns the time left until the next transition to comms."""
-        time = cls.get_time()
-        time_remaining = None
-        for idx, window in enumerate(cls._schedule):
-            if window[0] <= time < window[1]:
-                break
-        for window in cls._schedule[idx+1:]:
-            if window[2] == 'COMMS'
-                time_remaining = window[0] * 60 - time
-                break
-        return time_remaining
+    def get_time_until_next_state(cls):
+        """Returns the time left until the next scheduled state transition."""
+        if cls._current_state < len(cls._schedule) - 1
+            return cls._schedule[cls._current_state+1][0] * 60 - cls.get_time()
+        else:
+            return None

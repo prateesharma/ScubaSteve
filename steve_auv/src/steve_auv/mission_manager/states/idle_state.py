@@ -17,9 +17,10 @@ class IdleState(smach.State):
     State: 'IDLE'
 
     Outcomes:
-        explore:     'EXPLORE'
-        comms:       'COMMS'
-        mission_end: 'POWERDOWN'
+        explore:   'EXPLORE'
+        comms:     'COMMS'
+        powerdown: 'POWERDOWN'
+        failed:    'POWERDOWN'
     """
     def __init__(self):
         smach.State.__init__(

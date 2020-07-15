@@ -9,7 +9,6 @@ import steve_auv.mission_manager as mm
 
 from mm.state_machines.comms_sm import build_comms_sm
 from mm.state_machines.explore_sm import build_explore_sm
-from mm.state_machines.powerdown_sm import build_powerdown_sm
 from mm.states.end_state import EndState
 from mm.states.idle_state import IdleState
 from mm.states.powerdown_state import PowerdownState
@@ -30,14 +29,9 @@ def build_mission_manager_sm(comms_topic, gnc_topic):
     # Add states to the empty state machine
     with sm:
         smach.StateMachine.add(
-            'START',
-            StartState(),
-            transitions={'succeeded':'POWERUP'}
-        )
-        smach.StateMachine.add(
             'POWERUP',
             PowerupState(),
-            transitions={'succeeded':'RELEASE', 'failed':'TERMINATE'}
+            transitions={'succeeded':'RELEASE', 'failed':'POWERDOWN'}
         )
         smach.StateMachine.add(
             'RELEASE',
@@ -49,7 +43,7 @@ def build_mission_manager_sm(comms_topic, gnc_topic):
                 exec_timeout=rospy.Duration(1800.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
-            transitions={'suceeded':'SPLASHDOWN', 'failed':'TERMINATE'}
+            transitions={'suceeded':'SPLASHDOWN', 'failed':'POWERDOWN'}
         )
         smach.StateMachine.add(
             'SPLASHDOWN',
@@ -61,7 +55,7 @@ def build_mission_manager_sm(comms_topic, gnc_topic):
                 exec_timeout=rospy.Duration(60.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
-            transitions={'succeeded':'LOCALIZE', 'failed':'TERMINATE'}
+            transitions={'succeeded':'LOCALIZE', 'failed':'POWERDOWN'}
         )
         smach.StateMachine.add(
             'LOCALIZE',
@@ -73,7 +67,7 @@ def build_mission_manager_sm(comms_topic, gnc_topic):
                 exec_timeout=rospy.Duration(300.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
-            transitions={'succeeded':'IDLE', 'failed':'TERMINATE'}
+            transitions={'succeeded':'IDLE', 'failed':'POWERDOWN'}
         )
         smach.StateMachine.add(
             'IDLE',
@@ -96,18 +90,20 @@ def build_mission_manager_sm(comms_topic, gnc_topic):
             transitions={'succeeded':'IDLE', 'failed':'POWERDOWN'}
         )
         smach.StateMachine.add(
+            'SURFACE',
+            SimpleActionState(
+                gnc_topic,
+                GncAction,
+                goal=GncGoal('surface'),
+                result_cb=action_cb,
+                exec_timeout=rospy.Duration(60.0),
+                server_wait_timeout=rospy.Duration(10.0)
+            ),
+            transitions={'succeeded':'POWERDOWN', 'failed':'POWERDOWN'}
+        )
+        smach.StateMachine.add(
             'POWERDOWN',
-            build_powerdown_sm(),
-            transitions={'succeeded':'END'}
-        )
-        smach.StateMachine.add(
-            'TERMINATE',
-            PowerdownState(name='TERMINATE'),
-            transitions={'succeeded':'END'}
-        )
-        smach.StateMachine.add(
-            'END',
-            EndState(),
-            transitions={'succeeded':'succeeded', 'failed':'failed'}
+            PowerdownState(),
+            transitions={'succeeded':'succeeded', 'failed': 'failed'}
         )
     return sm

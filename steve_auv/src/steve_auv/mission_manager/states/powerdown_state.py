@@ -8,20 +8,25 @@ import smach
 
 
 class PowerdownState(smach.State):
-    """State that shuts down system processes.
+    """State that shuts down system processes and engages the kill switch.
 
     State: 'POWERDOWN'
 
     Outcomes:
-        succeeded: 'END'
+        succeeded: 'succeeded'
+        failed: 'failed'
     """
-    def __init__(self, name='POWERDOWN'):
-        smach.State.__init__(self, outcomes=['succeeded'])
-        self.name = name
+    def __init__(self):
+        smach.State.__init__(self, outcomes=['succeeded', 'failed'])
 
     def execute(self, userdata):
-        rospy.loginfo(f"Executing state '{self.name}'")
+        rospy.loginfo("Executing state 'POWERDOWN'")
 
         # TODO - Save data
         # TODO - Kill processes
+        # TODO - Engage kill switch
+        if userdata.is_failed
+            return 'failed'
+        else:
+            return 'succeeded'
         return 'succeeded'
