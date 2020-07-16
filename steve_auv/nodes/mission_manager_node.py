@@ -6,24 +6,39 @@
 #!/usr/bin/env python
 
 import rospy
-import smach
 import steve_auv.mission_manager as mm
 
 from mm.state_machines.mission_manager_sm import build_mission_manager_sm
+from mm.utils.mission_clock import MissionClock
+from mm.utils.topics import MissionManagerTopics
 
 
 def main():
     rospy.init_node('mission_manager')
 
-    # Access topics from the parameter server
-    comms_topic = rospy.get_param('~comms_topic')
-    gnc_topic = rospy.get_param('~gnc_topic')
+    # Add topics and flags to the empty object
+    topics = MissionManagerTopics()
+    topics.comms_topic = rospy.get_param('~comms_topic')
+    topics.gnc_topic = rospy.get_param('~gnc_topic')
+
+    # Configure the mission schedule
+    schedule = [
+        ( 0, 'EXPLORE'),
+        (15, 'COMMS'),
+        (20, 'EXPLORE'),
+        (35, 'COMMS'),
+        (40, 'EXPLORE'),
+        (55, 'COMMS'),
+        (60, 'POWERDOWN')
+    ]
+    mc = MissionClock.get_instance()
+    mc.set_mission_schedule(schedule)
 
     # Create the state machine
-    sm = build_mission_manager_sm(comms_topic, gnc_topic)
+    sm = build_mission_manager_sm(topics)
 
     # Execute the state machine plan
-    rospy.loginfo(f"Executing mission manager")
+    rospy.loginfo("Executing mission manager")
     outcome = sm.execute()
     rospy.spin()
 

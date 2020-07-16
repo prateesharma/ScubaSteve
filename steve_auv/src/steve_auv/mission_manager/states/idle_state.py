@@ -20,21 +20,32 @@ class IdleState(smach.State):
         explore:   'EXPLORE'
         comms:     'COMMS'
         powerdown: 'POWERDOWN'
-        failed:    'POWERDOWN'
+        failed:    'FAIL_POWERDOWN'
     """
     def __init__(self):
         smach.State.__init__(
             self,
             outcomes=['explore', 'comms', 'powerdown', 'failed']
         )
+        self.mc = MissionClock.get_instance()
 
     def execute(self, userdata):
-        rospy.loginfo(f"Executing state 'IDLE'")
+        rospy.loginfo("Executing state 'IDLE'")
+
+        # Act if there is a command
+        if userdata.command == "continue":
+            rospy.loginfo("Continue command received: continue")
+        elif userdata.command == "kill":
+            rospy.loginfo("Kill command received: powering down")
+            return 'powerdown'
+        if not userdata.command:
+            rospy.loginfo("No command received: continue")
+        else:
+            rospy.logerr("Unrecognized command received: continue anyway")
 
         # Reference the mission clock against the mission schedule to determine
         # the next state
-        mc = MissionClock.get_instance()
-        state = mc.get_mission_state()
+        state = self.mc.get_mission_state()
         if state == 'EXPLORE':
             return 'explore'
         elif state == 'COMMS':
@@ -42,6 +53,6 @@ class IdleState(smach.State):
         elif state == 'POWERDOWN':
             return 'powerdown'
         else:
-            rospy.logerr(f"Unrecognized state: failure, powering down")
+            rospy.logerr("Unrecognized state: failure, powering down")
             userdata.is_failed = True
             return 'failed'

@@ -7,12 +7,13 @@ import actionlib
 import rospy
 
 
-def explore_cb(userdata, status, result):
-    """Handles logging and flags for the explore state."""
+def comms_cb(userdata, status, result):
+    """Handles logging and flags for the comms state."""
+    userdata.command = result.command
     if status == actionlib.GoalStatus.SUCCEEDED:
-        rospy.loginfo("Explore goal completed successfully: continue")
+        rospy.loginfo("Comms goal completed successfully: continue")
     elif status == actionlib.GoalStatus.PREEMPTED:
-        rospy.loginfo("Explore goal preempted successfully: continue")
+        rospy.loginfo("Comms goal preempted successfully: continue")
     else:
         rospy.logerr("Something went wrong: failure, powering down")
-        userdata.is_failed = True 
+        userdata.is_failed = True

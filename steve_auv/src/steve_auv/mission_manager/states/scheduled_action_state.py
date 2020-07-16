@@ -3,6 +3,7 @@
 # TDC Team #2, Scuba Squad         #
 ####################################
 
+import actionlib
 import rospy
 import smach
 import steve_auv.mission_manager as mm
@@ -11,19 +12,20 @@ from mm.utils.mission_clock import MissionClock
 
 
 class ScheduledActionState(smach.State):
-    """State where the vehicle checks the mission clock and references
-    it against the mission timeline to determine when to preempt/cancel a
-    goal.
+    """State where an action is given to another subsystem via an action
+    client. Based on the schedule and the mission clock, the client is given a
+    timeout, after which, the action is preempted. After the action is either
+    completed or preempted, the mission clock's state is incremented.
 
     State: ScheduledActionState
 
     Outcomes:
-        succeeded
-        preempted
-        failed
+        succeeded: The goal was completed successfully
+        preempted: The goal was preempted successfully
+        failed:    The goal failed to be completed or preempted by the server
     """
-    def __init__(self, action_name, action_spec, goal=None, result_cb=None,
-                 preempt_timeout=rospy.Duration(60.0),
+    def __init__(self, action_name, action_spec, goal=None,
+                 result_cb=_result_cb, preempt_timeout=rospy.Duration(60.0),
                  server_wait_timeout=rospy.Duration(60.0)):
         smach.State.__init__(
             self,
@@ -51,32 +53,29 @@ class ScheduledActionState(smach.State):
             userdata.is_failed = True
             return 'failed'
 
-        # Wait until the goal is completed or preempted
-        client.send_goal(self.goal)
-        time_until_preempt = rospy.Duration(self.mc.get_time_until_next_state())
-        result = client.wait_for_result(time_until_preempt)
-        # TODO
+        # Wait until the goal is completed, otherwise, preempt the goal
+        execute_timeout = rospy.Duration(self.mc.get_time_until_next_state())
+        status = client.send_goal_and_wait(
+            self.goal,
+            execute_timeout=execute_timeout,
+            preempt_timeout=self.preempt_timeout
+        )
 
-        # If received, continue
-        if result:
-            rospy.loginfo(f"Received localize signal: continuing")
+        # Transition to the next state based on the state of the goal
+        self._result_cb(userdata, client.get_result(), status)
+        self.mc.next_state()
+        if status == actionlib.GoalStatus.SUCCEEDED:
             return 'succeeded'
+        elif status == actionlib.GoalStatus.PREEMPTED:
+            return 'preempted'
         else:
-            rospy.logerr(f"Localize goal timeout: failure, powering down")
-            userdata.is_failed = True
-            return 'failed'
+            return 'failed' 
 
-        # Reference the mission clock against the mission schedule to determine
-        # the next state
-        mc = MissionClock.get_instance()
-        state = mc.get_mission_state()
-        if state == 'EXPLORE':
-            return 'explore'
-        elif state == 'COMMS':
-            return 'comms'
-        elif state == 'POWERDOWN':
-            return 'powerdown'
+    def _result_cb(self, userdata, status, result):
+        if status == actionlib.GoalStatus.SUCCEEDED:
+            rospy.loginfo("Goal completed successfully: continue")
+        elif status == actionlib.GoalStatus.PREEMPTED:
+            rospy.loginfo("Goal preempted successfully: continue")
         else:
-            rospy.logerr(f"Unrecognized state: failure, powering down")
+            rospy.logerr("Something went wrong: failure, powering down")
             userdata.is_failed = True
-            return 'failed'
