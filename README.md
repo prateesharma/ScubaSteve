@@ -13,6 +13,7 @@ scuba_steve/
     ├── src/
     └── test/
 ├── steve_auv/
+    ├── actions/
     ├── CMakeLists.txt
     ├── launch/
     ├── nodes/
@@ -21,7 +22,7 @@ scuba_steve/
     ├── src/
         └── steve_auv/
             ├── sim/
-            ├── state_machine/
+            ├── mission_manager/
                 ├── __init__.py
                 ├── state_machine/
                 ├── states/
@@ -29,7 +30,7 @@ scuba_steve/
             └── transducers/
     └── test/
         └── steve_auv/
-            └── state_machine/
+            └── mission_manager/
 ├── steve_ground_station/
     ├── CMakeLists.txt
     ├── package.xml
