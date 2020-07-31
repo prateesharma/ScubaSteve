@@ -1,4 +1,7 @@
 <launch>
+    <node name="comms_node" pkg="steve_auv" type="comms_node">
+        <param name="comms_topic" value="/steve_auv/comms"/>
+    </node>
     <node name="mission_manager_node" pkg="steve_auv" type="mission_manager_node">
         <param name="comms_topic" value="/steve_auv/comms"/>
         <param name="gnc_topic" value="/steve_auv/gnc"/>
