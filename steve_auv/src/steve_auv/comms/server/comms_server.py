@@ -6,7 +6,7 @@
 import actionlib
 import rospy
 
-from steve_auv.msg import CommsAction
+from steve_auv.msg import CommsAction, CommsResult
 
 
 class CommsServer(object):
@@ -34,47 +34,44 @@ class CommsServer(object):
 
     def execute_cb(self, goal):
         is_success = True
+        cmd = None
         result = CommsResult()
         if goal.action == "release":
+            rate = rospy.Rate(1)
             while True:
+                # TODO: TCP connection
+                if cmd == "release":
+                    self._server.set_succeeded()
+                    break
                 if self._server.is_preempt_requested():
                     self._server.set_preempted()
                     is_success = False
                     break
-                # TODO: TCP connection
-            
+                rate.sleep() 
         if goal.action == "comms":
+             rate = rospy.Rate(1)
              while True:
+                # TODO: TCP connection
+                if cmd == "downlink":
+                    # TODO: Copy files
+                    pass
+                if cmd == "continue":
+                    result.command = "continue"
+                    self._server.set_succeeded()
+                    break
+                if cmd == "kill":
+                    result.command = "kill"
+                    self._server.set_succeeded()
+                    break
                 if self._server.is_preempt_requested():
                     self._server.set_preempted()
                     is_success = False
                     break
-                # TODO: TCP connection
-                if msg:
-                    result.command = msg
-                    is_success = True
-                    break
+                rate.sleep() 
         else:
             rospy.logerr()
         
         if is_success:
             self._server.set_succeeded(result)
-
-
-
-        rate = rospy.Rate(1)
-
-        for i in range(0, goal.number_of_minutes):
-            if self.a_server.is_preempt_requested():
-                self.a_server.set_preempted()
-                success = False
-                break
-
-            last_dish_washed = 'bowl-' + str(i)
-            feedback.last_dish_washed = last_dish_washed
-            result.dishes_washed.append(last_dish_washed)
-            self.a_server.publish_feedback(feedback)
-            rate.sleep()
-
-        if success:
-            self.a_server.set_succeeded(result)
+        else:
+            self._server.set_aborted(result)
