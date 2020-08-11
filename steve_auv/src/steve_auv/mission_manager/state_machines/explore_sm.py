@@ -42,7 +42,7 @@ def build_explore_sm(topics):
                 GncAction,
                 goal=GncGoal('explore'),
                 result_cb=explore_cb,
-                preempt_timeout=rospy.Duration(60.0),
+                preempt_timeout=rospy.Duration(10.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
             transitions={'succeeded':'SURFACE', 'preempted':'SURFACE', 'failed':'failed_underwater'}

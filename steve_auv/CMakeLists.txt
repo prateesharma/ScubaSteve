@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.0.2)
 project(steve_auv)
 
 find_package(catkin REQUIRED COMPONENTS
-  actionib
+  actionlib
   actionlib_msgs
   rospy
   smach

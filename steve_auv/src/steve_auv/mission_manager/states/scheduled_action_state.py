@@ -25,7 +25,7 @@ class ScheduledActionState(smach.State):
         failed:    The goal failed to be completed or preempted by the server
     """
     def __init__(self, action_name, action_spec, goal=None,
-                 result_cb=_result_cb, preempt_timeout=rospy.Duration(60.0),
+                 result_cb=_result_cb, preempt_timeout=rospy.Duration(5.0),
                  server_wait_timeout=rospy.Duration(60.0)):
         smach.State.__init__(
             self,

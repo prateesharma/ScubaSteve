@@ -97,7 +97,7 @@ def build_mission_manager_sm(topics):
                 CommsAction,
                 goal=GncGoal('comms'),
                 result_cb=comms_cb,
-                preempt_timeout=rospy.Duration(60.0),
+                preempt_timeout=rospy.Duration(5.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
             transitions={

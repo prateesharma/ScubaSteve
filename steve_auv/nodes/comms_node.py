@@ -16,7 +16,12 @@ def main():
 
     # Set up and run the comms server
     rospy.loginfo("Executing comms server")
-    server = CommsServer(rospy.get_name(), rospy.get_param('~comms_topic'))
+    server = CommsServer(
+                 rospy.get_name(),
+                 rospy.get_param('~comms_topic'),
+                 rospy.get_param('~tcp_host'),
+                 rospy.get_param('~tcp_port')
+    )
     rospy.spin()
 
 
