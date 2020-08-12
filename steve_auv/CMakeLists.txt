@@ -32,4 +32,6 @@ install(DIRECTORY src
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 
+catkin_add_nosetests(test/steve_auv/comms/test_comms.py)
 catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_clock.py)
+catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_manager_demo.py)
