@@ -5,10 +5,9 @@
 
 import actionlib
 import rospy
-import steve_auv.comms as comms
+import steve_auv.gnc as gnc
 
-from comms.server.tcp_socket import TcpSocket
-from steve_auv.msg import CommsAction, CommsResult
+from steve_auv.msg import GncAction, GncResult
 
 
 class GncDemoServer(object):
@@ -33,7 +32,7 @@ class GncDemoServer(object):
 
     def execute_cb(self, goal):
         is_success = False
-        result = CommsResult()
+        result = GncResult()
         if goal.action == "release":
             rate = rospy.Rate(1)
             while True:

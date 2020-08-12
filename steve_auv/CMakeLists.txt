@@ -33,5 +33,6 @@ install(DIRECTORY src
 # )
 
 catkin_add_nosetests(test/steve_auv/comms/test_comms.py)
+catkin_add_nosetests(test/steve_auv/gnc/test_gnc_demo.py)
 catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_clock.py)
 catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_manager_demo.py)
