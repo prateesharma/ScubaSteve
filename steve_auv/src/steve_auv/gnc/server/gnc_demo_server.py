@@ -15,17 +15,18 @@ class GncDemoServer(object):
     acts upon them when received. The GNC server can work on one of the
     following processes at a time:
 
-        'dive':    Vehicle dives underwater by thrusting downward.
         'explore': Vehicle explores the environment by thrusting forward.
+        'dive':    Vehicle dives underwater by thrusting downward.
         'surface': Vehicle surfaces by thrusting upward.
 
     Processes can be preempted or cancelled by the mission manager.
     """
-    def __init__(self, name, topic, host, port):
+    def __init__(self, name, gnc_topic, arduino_topic):
         self._name = name
-        self._topic = topic
+        self._gnc_topic = gnc_topic
+        self._arduino_topic = arduino_topic
         self._server = actionlib.SimpleActionServer(
-                           self._topic,
+                           self._gnc_topic,
                            GncAction,
                            execute_cb=self.execute_cb
                        ).start()
@@ -33,35 +34,27 @@ class GncDemoServer(object):
     def execute_cb(self, goal):
         is_success = False
         result = GncResult()
-        if goal.action == "release":
+        if goal.action == "explore":
             rate = rospy.Rate(1)
             while True:
                 if self._server.is_preempt_requested():
                     break
-                cmd = self._socket.listen()
-                if cmd == "release":
-                    is_success = True
-                    break
+                # TODO
                 rate.sleep() 
-        elif goal.action == "comms":
-             rate = rospy.Rate(1)
-             while True:
+        elif goal.action == "dive":
+            rate = rospy.Rate(1)
+            while True:
                 if self._server.is_preempt_requested():
-                    result.command = "continue"
                     break
-                cmd = self._socket.listen()
-                if cmd == "downlink":
-                    # TODO: Copy files
-                    pass
-                elif cmd == "continue":
-                    result.command = "continue"
-                    is_success = True
+                # TODO
+                rate.sleep()
+        elif goal.action == "surface":
+            rate = rospy.Rate(1)
+            while True:
+                if self._server.is_preempt_requested():
                     break
-                elif cmd == "kill":
-                    result.command = "kill"
-                    is_success = True
-                    break
-                rate.sleep() 
+                # TODO
+                rate.sleep()
         else:
             rospy.logerr("Invalid goal received. Cancelling goal.")
 
