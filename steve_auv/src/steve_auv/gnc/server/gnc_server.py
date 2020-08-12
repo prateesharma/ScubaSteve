@@ -7,20 +7,18 @@ import actionlib
 import rospy
 import steve_auv.comms as comms
 
-from comms.utils.tcp_socket import TcpSocket
+from comms.server.tcp_socket import TcpSocket
 from steve_auv.msg import CommsAction, CommsResult
 
 
-class CommsServer(object):
-    """Communications action server that listens for goals from the mission
-    manager and acts upon them when received. The comms server can work on one
-    of the following processes at a time:
+class GncDemoServer(object):
+    """GNC action server that listens for goals from the mission manager and
+    acts upon them when received. The GNC server can work on one of the
+    following processes at a time:
 
-        'release': Waits for the release signal to be sent by the ground
-                   station before ending the process.
-        'comms':   Allows the ground station to recursively copy image files.
-                   Waits for a command to be received from the ground station
-                   before ending the process.
+        'dive':    Vehicle dives underwater by thrusting downward.
+        'explore': Vehicle explores the environment by thrusting forward.
+        'surface': Vehicle surfaces by thrusting upward.
 
     Processes can be preempted or cancelled by the mission manager.
     """
@@ -29,10 +27,9 @@ class CommsServer(object):
         self._topic = topic
         self._server = actionlib.SimpleActionServer(
                            self._topic,
-                           CommsAction,
+                           GncAction,
                            execute_cb=self.execute_cb
                        ).start()
-        self._socket = TcpSocket(host, port)
 
     def execute_cb(self, goal):
         is_success = False

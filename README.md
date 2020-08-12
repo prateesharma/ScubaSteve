@@ -22,7 +22,11 @@ scuba_steve/
     ├── src/
         └── steve_auv/
             ├── comms/
-                └── server/
+                ├── server/
+                └── utils/
+            ├── gnc/
+                ├── server/
+                └── utils/
             ├── mission_manager/
                 ├── state_machine/
                 ├── states/
@@ -32,6 +36,7 @@ scuba_steve/
     └── test/
         └── steve_auv/
             ├── comms/
+            ├── gnc/
             └── mission_manager/
 ├── steve_ground_station/
     ├── CMakeLists.txt
