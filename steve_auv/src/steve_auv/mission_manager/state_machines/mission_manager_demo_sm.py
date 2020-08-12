@@ -9,7 +9,7 @@ import smach_ros
 import steve_auv.mission_manager as mm
 
 from mm.state_machines.comms_sm import build_comms_sm
-from mm.state_machines.explore_sm import build_explore_sm
+from mm.state_machines.explore_sm import build_explore_demo_sm
 from mm.states.end_state import EndState
 from mm.states.idle_state import IdleState
 from mm.states.powerdown_state import PowerdownState
@@ -45,7 +45,11 @@ def build_mission_manager_demo_sm(topics):
                 exec_timeout=rospy.Duration(1800.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
-            transitions={'succeeded':'SPLASHDOWN', 'failed':'FAIL_POWERDOWN'}
+            transitions={
+                'succeeded':'IDLE',
+                'preempted':'POWERDOWN',
+                'failed':'FAIL_POWERDOWN'
+            }
         )
         smach.StateMachine.add(
             'IDLE',
@@ -59,11 +63,10 @@ def build_mission_manager_demo_sm(topics):
         )
         smach.StateMachine.add(
             'EXPLORE',
-            build_explore_sm(userdata),
+            build_explore_demo_sm(userdata),
             transitions={
                 'succeeded':'IDLE',
-                'failed':'FAIL_POWERDOWN',
-                'failed_underwater':'FAIL_SURFACE'
+                'failed':'FAIL_POWERDOWN'
             }
         )
         smach.StateMachine.add(
@@ -73,7 +76,7 @@ def build_mission_manager_demo_sm(topics):
                 CommsAction,
                 goal=GncGoal('comms'),
                 result_cb=comms_cb,
-                preempt_timeout=rospy.Duration(5.0),
+                preempt_timeout=rospy.Duration(10.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
             transitions={
@@ -86,21 +89,6 @@ def build_mission_manager_demo_sm(topics):
             'POWERDOWN',
             PowerdownState(),
             transitions={'succeeded':'succeeded', 'failed': 'failed'}
-        )
-        smach.StateMachine.add(
-            'FAIL_SURFACE',
-            smach_ros.SimpleActionState(
-                topics.gnc_topic,
-                GncAction,
-                goal=GncGoal('surface'),
-                result_cb=action_cb,
-                exec_timeout=rospy.Duration(60.0),
-                server_wait_timeout=rospy.Duration(10.0)
-            ),
-            transitions={
-                'succeeded':'FAIL_POWERDOWN',
-                'failed':'FAIL_POWERDOWN'
-            }
         )
         smach.StateMachine.add(
             'FAIL_POWERDOWN',

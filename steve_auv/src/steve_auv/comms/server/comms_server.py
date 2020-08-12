@@ -51,6 +51,7 @@ class CommsServer(object):
              rate = rospy.Rate(1)
              while True:
                 if self._server.is_preempt_requested():
+                    result.command = "continue"
                     break
                 cmd = self._socket.listen()
                 if cmd == "downlink":
@@ -66,7 +67,7 @@ class CommsServer(object):
                     break
                 rate.sleep() 
         else:
-            rospy.logerr("Invalid goal received. Aborting goal.")
+            rospy.logerr("Invalid goal received. Cancelling goal.")
 
         if is_success:
             self._server.set_succeeded(result)

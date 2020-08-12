@@ -14,13 +14,13 @@ from mm.utils import action_cb
 from steve_auv.msg import GncAction, GncGoal
 
 
-def build_explore_sm(topics):
+def build_explore_demo_sm(topics):
     """Builds the state machine for the explore sequence."""
     rospy.loginfo(f"Building 'EXPLORE' state machine")
 
     # Add states to the state machine
     sm = smach.StateMachine(
-             outcomes=['succeeded', 'failed', 'failed_underwater']
+             outcomes=['succeeded', 'failed']
          )
     with sm:
         smach.StateMachine.add(
@@ -33,7 +33,7 @@ def build_explore_sm(topics):
                 exec_timeout=rospy.Duration(60.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
-            transitions={'succeeded':'EXPLORE', 'failed':'failed_underwater'}
+            transitions={'succeeded':'EXPLORE', 'failed':'failed'}
         )
         smach.StateMachine.add(
             'EXPLORE',
@@ -45,7 +45,7 @@ def build_explore_sm(topics):
                 preempt_timeout=rospy.Duration(10.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),
-            transitions={'succeeded':'SURFACE', 'preempted':'SURFACE', 'failed':'failed_underwater'}
+            transitions={'succeeded':'SURFACE', 'preempted':'SURFACE', 'failed':'failed'}
         )
         smach.StateMachine.add(
             'SURFACE',

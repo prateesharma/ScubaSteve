@@ -34,10 +34,10 @@ class TcpSocket(object):
         # connects, it returns a new socket object representing the connection
         # and a tuple holding the address of the client.
         conn = None
+        self._socket.settimeout(1)
         try:
-            self._socket.settimeout(1)
             conn, addr = self._socket.accept()
-            rospy.loginfo(f"Connected by {addr}")
+            rospy.loginfo(f"Connected to {addr}")
         except socket.timeout:
             rospy.loginfo("Socket timed out. No connection established."
 
