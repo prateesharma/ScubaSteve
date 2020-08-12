@@ -1,0 +1,11 @@
+<launch>
+    <node name="comms_node" pkg="steve_auv" type="comms_node">
+        <param name="comms_topic" value="/steve_auv/comms"/>
+        <param name="tcp_host" value="192.168.4.1"/>
+        <param name="tcp_port" value="6677"/>
+    </node>
+    <node name="mission_manager_demo_node" pkg="steve_auv" type="mission_manager_demo_node">
+        <param name="comms_topic" value="/steve_auv/comms"/>
+        <param name="gnc_topic" value="/steve_auv/gnc"/>
+    </node>
+</launch>

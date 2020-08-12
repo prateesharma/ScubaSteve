@@ -16,24 +16,18 @@ scuba_steve/
     ├── actions/
     ├── CMakeLists.txt
     ├── launch/
-        └── steve_launch.launch
     ├── nodes/
-        ├── comms_node.py
-        ├── __init__.py
-        └── mission_manager_node.py
     ├── package.xml
     ├── setup.py
     ├── src/
         └── steve_auv/
             ├── comms/
-                ├── __init__.py
                 └── server/
             ├── mission_manager/
-                ├── __init__.py
                 ├── state_machine/
                 ├── states/
                 └── utils/
-            ├── sims/
+            ├── sim/
             └── transducers/
     └── test/
         └── steve_auv/

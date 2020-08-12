@@ -14,7 +14,7 @@ from mm.utils import action_cb
 from steve_auv.msg import GncAction, GncGoal
 
 
-def build_explore_sm(topics):
+def build_explore_demo_sm(topics):
     """Builds the state machine for the explore sequence."""
     rospy.loginfo(f"Building 'EXPLORE' state machine")
 
@@ -24,7 +24,7 @@ def build_explore_sm(topics):
          )
     with sm:
         smach.StateMachine.add(
-            'DIVE',
+            'DIVE_DEMO',
             smach_ros.SimpleActionState(
                 topics.gnc_topic,
                 GncAction,
@@ -36,7 +36,7 @@ def build_explore_sm(topics):
             transitions={'succeeded':'EXPLORE', 'failed':'failed_underwater'}
         )
         smach.StateMachine.add(
-            'EXPLORE',
+            'EXPLORE_DEMO',
             ScheduledActionState(
                 topics.gnc_topic,
                 GncAction,
@@ -48,7 +48,7 @@ def build_explore_sm(topics):
             transitions={'succeeded':'SURFACE', 'preempted':'SURFACE', 'failed':'failed_underwater'}
         )
         smach.StateMachine.add(
-            'SURFACE',
+            'SURFACE_DEMO',
             smach_ros.SimpleActionState(
                 topics.gnc_topic,
                 GncAction,
