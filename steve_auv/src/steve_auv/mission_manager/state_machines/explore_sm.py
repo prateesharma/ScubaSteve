@@ -26,7 +26,7 @@ def build_explore_sm(topics):
         smach.StateMachine.add(
             'DIVE',
             smach_ros.SimpleActionState(
-                topics.gnc_topic,
+                topics.gnc_mode_topic,
                 GncAction,
                 goal=GncGoal('dive'),
                 result_cb=action_cb,
@@ -38,7 +38,7 @@ def build_explore_sm(topics):
         smach.StateMachine.add(
             'EXPLORE',
             ScheduledActionState(
-                topics.gnc_topic,
+                topics.gnc_mode_topic,
                 GncAction,
                 goal=GncGoal('explore'),
                 result_cb=explore_cb,
@@ -50,7 +50,7 @@ def build_explore_sm(topics):
         smach.StateMachine.add(
             'SURFACE',
             smach_ros.SimpleActionState(
-                topics.gnc_topic,
+                topics.gnc_mode_topic,
                 GncAction,
                 goal=GncGoal('surface'),
                 result_cb=action_cb,

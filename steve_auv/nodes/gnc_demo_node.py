@@ -18,8 +18,8 @@ def main():
     rospy.loginfo("Executing GNC server")
     server = GncDemoServer(
                  rospy.get_name(),
-                 rospy.get_param('~gnc_topic'),
-                 rospy.get_param('~arduino_topic')
+                 rospy.get_param('~gnc_mode_topic'),
+                 rospy.get_param('~gnc_thrusters_topic')
     )
     rospy.spin()
 

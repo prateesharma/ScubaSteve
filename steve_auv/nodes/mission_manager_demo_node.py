@@ -20,8 +20,8 @@ def main():
 
     # Add topics and flags to the empty object
     topics = MissionManagerTopics()
-    topics.comms_topic = rospy.get_param('~comms_topic')
-    topics.gnc_topic = rospy.get_param('~gnc_topic')
+    topics.comms_mode_topic = rospy.get_param('~comms_mode_topic')
+    topics.gnc_mode_topic = rospy.get_param('~gnc_mode_topic')
 
     # Configure the mission schedule
     schedule = [

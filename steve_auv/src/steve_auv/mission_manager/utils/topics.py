@@ -7,5 +7,5 @@
 class MissionManagerTopics:
 
     def __init__(self):
-        self.comms_topic = None
-        self.gnc_topic = None
+        self.comms_mode_topic = None
+        self.gnc_mode_topic = None

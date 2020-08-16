@@ -38,7 +38,7 @@ def build_mission_manager_demo_sm(topics):
         smach.StateMachine.add(
             'RELEASE',
             smach_ros.SimpleActionState(
-                topics.comms_topic,
+                topics.comms_mode_topic,
                 CommsAction,
                 goal=CommsGoal('release'),
                 result_cb=release_cb,
@@ -72,7 +72,7 @@ def build_mission_manager_demo_sm(topics):
         smach.StateMachine.add(
             'COMMS',
             ScheduledActionState(
-                topics.comms_topic,
+                topics.comms_mode_topic,
                 CommsAction,
                 goal=GncGoal('comms'),
                 result_cb=comms_cb,

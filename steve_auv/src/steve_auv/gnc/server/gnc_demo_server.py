@@ -30,6 +30,18 @@ class GncDemoServer(object):
                            GncAction,
                            execute_cb=self.execute_cb
                        ).start()
+        self._forward_port_thruster_subscriber = rospy.Publisher(
+            gnc_topic + "/forward_port_thruster", float)
+        self._forward_starboard_thruster_subscriber = rospy.Publisher(
+            gnc_topic + "/forward_port_thruster", float)
+        self._aft_port_thruster_subscriber = rospy.Publisher(
+            gnc_topic + "/forward_port_thruster", float)
+        self._aft_starboard_thruster_subscriber = rospy.Publisher(
+            gnc_topic + "/forward_port_thruster", float)
+        self._depth_port_thruster_subscriber = rospy.Publisher(
+            gnc_topic + "/forward_port_thruster", float)
+        self._depth_starboard_thruster_subscriber = rospy.Publisher(
+            gnc_topic + "/forward_port_thruster", float)
 
     def execute_cb(self, goal):
         is_success = False
