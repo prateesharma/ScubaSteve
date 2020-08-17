@@ -4,6 +4,7 @@ project(steve_auv)
 find_package(catkin REQUIRED COMPONENTS
   actionlib
   actionlib_msgs
+  message_generation
   rospy
   smach
   smach_msgs
@@ -14,10 +15,16 @@ add_action_files(DIRECTORY action FILES
   Comms.action
   Gnc.action
 )
+add_message_files(FILES
+  GncThrusters.msg
+)
+
 generate_messages(DEPENDENCIES actionlib_msgs)
 
 catkin_python_setup()
-catkin_package(DEPENDS)
+catkin_package(CATKIN_DEPENDS
+  message_runtime
+)
 
 include_directories(
   ${catkin_INCLUDE_DIRS}

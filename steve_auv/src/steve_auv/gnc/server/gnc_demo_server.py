@@ -7,7 +7,7 @@ import actionlib
 import rospy
 import steve_auv.gnc as gnc
 
-from steve_auv.msg import GncAction, GncResult
+from steve_auv.msg import GncAction, GncResult, GncThrusters
 
 
 class GncDemoServer(object):
@@ -21,27 +21,17 @@ class GncDemoServer(object):
 
     Processes can be preempted or cancelled by the mission manager.
     """
-    def __init__(self, name, gnc_topic, arduino_topic):
+    def __init__(self, name, gnc_mode_topic, gnc_thrusters_topic):
         self._name = name
-        self._gnc_topic = gnc_topic
-        self._arduino_topic = arduino_topic
         self._server = actionlib.SimpleActionServer(
                            self._gnc_topic,
                            GncAction,
                            execute_cb=self.execute_cb
                        ).start()
-        self._forward_port_thruster_subscriber = rospy.Publisher(
-            gnc_topic + "/forward_port_thruster", float)
-        self._forward_starboard_thruster_subscriber = rospy.Publisher(
-            gnc_topic + "/forward_port_thruster", float)
-        self._aft_port_thruster_subscriber = rospy.Publisher(
-            gnc_topic + "/forward_port_thruster", float)
-        self._aft_starboard_thruster_subscriber = rospy.Publisher(
-            gnc_topic + "/forward_port_thruster", float)
-        self._depth_port_thruster_subscriber = rospy.Publisher(
-            gnc_topic + "/forward_port_thruster", float)
-        self._depth_starboard_thruster_subscriber = rospy.Publisher(
-            gnc_topic + "/forward_port_thruster", float)
+        self._thrusters_publisher = rospy.Publisher(
+                                        gnc_thrusters_topic,
+                                        GncThrusters
+                                    )
 
     def execute_cb(self, goal):
         is_success = False
