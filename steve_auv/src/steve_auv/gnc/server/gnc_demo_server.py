@@ -25,7 +25,7 @@ class GncDemoServer(object):
     def __init__(self, name, gnc_mode_topic, gnc_thrusters_topic):
         self._name = name
         self._server = actionlib.SimpleActionServer(
-                           self._gnc_topic,
+                           gnc_mode_topic,
                            GncAction,
                            execute_cb=self.execute_cb
                        ).start()
