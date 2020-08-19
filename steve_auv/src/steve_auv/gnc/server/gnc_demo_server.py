@@ -6,8 +6,9 @@
 import actionlib
 import rospy
 import steve_auv.gnc as gnc
+import time
 
-from steve_auv.msg import GncAction, GncResult, GncThrusters
+from steve_auv.msg import GncAction, GncResult, GncThrustersMsg
 
 
 class GncDemoServer(object):
@@ -30,35 +31,36 @@ class GncDemoServer(object):
                        ).start()
         self._thrusters_publisher = rospy.Publisher(
                                         gnc_thrusters_topic,
-                                        GncThrusters
+                                        GncThrustersMsg
                                     )
+        msg = GncThrustersMsg(0.0, 0.0, 0.0, 0.0, 0.0, 0.0)
+        self._thrusters_publisher(msg)
 
     def execute_cb(self, goal):
         is_success = False
         result = GncResult()
         if goal.action == "explore":
-            rate = rospy.Rate(1)
-            while True:
-                if self._server.is_preempt_requested():
-                    break
-                # TODO
-                rate.sleep() 
+            duration = 60.0
+            msg = GncThrustersMsg(0.0, 0.0, 0.0, 0.0, 1.0, 1.0)
         elif goal.action == "dive":
-            rate = rospy.Rate(1)
-            while True:
-                if self._server.is_preempt_requested():
-                    break
-                # TODO
-                rate.sleep()
+            duration = 15.0
+            msg = GncThrustersMsg(1.0, 1.0, 1.0, 1.0, 0.0, 0.0)
         elif goal.action == "surface":
-            rate = rospy.Rate(1)
-            while True:
-                if self._server.is_preempt_requested():
-                    break
-                # TODO
-                rate.sleep()
+            duration = 15.0
+            msg = GncThrustersMsg(-1.0, -1.0, -1.0, -1.0, 0.0, 0.0)
         else:
             rospy.logerr("Invalid goal received. Cancelling goal.")
+            self._server.set_preempted(result)
+
+        self._thrusters_publisher(msg)
+        rate = rospy.Rate(1)
+        start_time = time.time()
+        while time.time() - start_time > duration:
+            if self._server.is_preempt_requested():
+                break
+            rate.sleep()
+        if time.time() - start_time > duration:
+            is_success = True
 
         if is_success:
             self._server.set_succeeded(result)

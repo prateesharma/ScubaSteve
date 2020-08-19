@@ -16,7 +16,7 @@ add_action_files(DIRECTORY action FILES
   Gnc.action
 )
 add_message_files(FILES
-  GncThrusters.msg
+  GncThrustersMsg.msg
 )
 
 generate_messages(DEPENDENCIES actionlib_msgs)
