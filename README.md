@@ -25,8 +25,7 @@ scuba_steve/
                 ├── server/
                 └── utils/
             ├── gnc/
-                ├── server/
-                └── utils/
+                └── server/
             ├── mission_manager/
                 ├── state_machine/
                 ├── states/
@@ -34,6 +33,8 @@ scuba_steve/
             ├── sim/
             ├── transducers/
             └── vision/
+                ├── camera/
+                └── server/
     └── test/
         └── steve_auv/
             ├── comms/
