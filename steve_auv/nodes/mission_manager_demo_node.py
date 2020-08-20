@@ -22,6 +22,7 @@ def main():
     topics = MissionManagerTopics()
     topics.comms_mode_topic = rospy.get_param('~comms_mode_topic')
     topics.gnc_mode_topic = rospy.get_param('~gnc_mode_topic')
+    topics.vision_mode_topic = rospy.get_param('~vision_mode_topic')
 
     # Configure the mission schedule
     schedule = [

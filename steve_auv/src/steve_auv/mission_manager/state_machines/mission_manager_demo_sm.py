@@ -8,16 +8,15 @@ import smach
 import smach_ros
 import steve_auv.mission_manager as mm
 
-from mm.state_machines.comms_sm import build_comms_sm
 from mm.state_machines.explore_sm import build_explore_demo_sm
+from mm.states.comms_state import CommsState
 from mm.states.end_state import EndState
 from mm.states.idle_state import IdleState
 from mm.states.powerdown_state import PowerdownState
 from mm.states.powerup_state import PowerupState
 from mm.states.release_state import release_cb
 from mm.states.start_state import StartState
-from mm.utils import action_cb
-from steve_auv.msg import CommsAction, CommsGoal, GncAction, GncGoal
+from steve_auv.msg import CommsAction, CommsGoal
 
 
 def build_mission_manager_demo_sm(topics):
@@ -27,6 +26,9 @@ def build_mission_manager_demo_sm(topics):
     sm = smach.StateMachine(outcomes=['succeeded', 'failed'])
     sm.userdata.command = None
     sm.userdata.is_failed = False
+    sm.userdata.image_count = 0
+    sm.userdata.new_image_index = 0
+    sm.userdata.new_image_count = 0
 
     # Add states to the empty state machine
     with sm:
@@ -71,11 +73,9 @@ def build_mission_manager_demo_sm(topics):
         )
         smach.StateMachine.add(
             'COMMS',
-            ScheduledActionState(
+            CommsState(
                 topics.comms_mode_topic,
-                CommsAction,
-                goal=GncGoal('comms'),
-                result_cb=comms_cb,
+                topics.vision_mode_topic,
                 preempt_timeout=rospy.Duration(10.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),

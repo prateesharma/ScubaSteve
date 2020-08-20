@@ -14,6 +14,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_action_files(DIRECTORY action FILES
   Comms.action
   Gnc.action
+  Vision.action
 )
 add_message_files(FILES
   GncThrustersMsg.msg
@@ -43,3 +44,4 @@ catkin_add_nosetests(test/steve_auv/comms/test_comms.py)
 catkin_add_nosetests(test/steve_auv/gnc/test_gnc_demo.py)
 catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_clock.py)
 catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_manager_demo.py)
+catkin_add_nosetests(test/steve_auv/gnc/test_vision.py)

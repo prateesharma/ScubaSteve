@@ -26,9 +26,8 @@ class CommsServer(object):
     """
     def __init__(self, name, topic, host, port):
         self._name = name
-        self._topic = topic
         self._server = actionlib.SimpleActionServer(
-                           self._topic,
+                           topic,
                            CommsAction,
                            execute_cb=self.execute_cb
                        ).start()

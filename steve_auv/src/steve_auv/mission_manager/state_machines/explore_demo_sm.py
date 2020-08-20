@@ -8,8 +8,7 @@ import smach
 import smach_ros
 import steve_auv.mission_manager as mm
 
-from mm.states.explore_state import explore_cb
-from mm.states.scheduled_action_state import ScheduledActionState
+from mm.states.explore_state import ExploreState
 from mm.utils import action_cb
 from steve_auv.msg import GncAction, GncGoal
 
@@ -37,11 +36,9 @@ def build_explore_demo_sm(topics):
         )
         smach.StateMachine.add(
             'EXPLORE',
-            ScheduledActionState(
+            ExploreState(
                 topics.gnc_mode_topic,
-                GncAction,
-                goal=GncGoal('explore'),
-                result_cb=explore_cb,
+                topics.vision_mode_topic,
                 preempt_timeout=rospy.Duration(10.0),
                 server_wait_timeout=rospy.Duration(10.0)
             ),

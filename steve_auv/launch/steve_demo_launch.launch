@@ -11,5 +11,11 @@
     <node name="mission_manager_demo_node" pkg="steve_auv" type="mission_manager_demo_node">
         <param name="comms_mode_topic" value="/steve_auv/comms/mode"/>
         <param name="gnc_mode_topic" value="/steve_auv/gnc/mode"/>
+        <param name="vision_mode_topic" value="/steve_auv/vision/mode"/>
+    </node>
+    <node name="vision_node" pkg="steve_auv" type="vision_node">
+        <param name="vision_mode_topic" value="/steve_auv/vision/mode"/>
+        <param name="vision_output_dir" value="~/test/output"/>
+        <param name="vision_rate" value="10"/>
     </node>
 </launch>

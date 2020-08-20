@@ -9,3 +9,4 @@ class MissionManagerTopics:
     def __init__(self):
         self.comms_mode_topic = None
         self.gnc_mode_topic = None
+        self.vision_mode_topic = None
