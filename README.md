@@ -32,12 +32,14 @@ scuba_steve/
                 ├── states/
                 └── utils/
             ├── sim/
-            └── transducers/
+            ├── transducers/
+            └── vision/
     └── test/
         └── steve_auv/
             ├── comms/
             ├── gnc/
-            └── mission_manager/
+            ├── mission_manager/
+            └── vision/
 ├── steve_ground_station/
     ├── CMakeLists.txt
     ├── package.xml
