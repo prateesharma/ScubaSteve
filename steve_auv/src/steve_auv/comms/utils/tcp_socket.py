@@ -39,7 +39,7 @@ class TcpSocket(object):
             conn, addr = self._socket.accept()
             rospy.loginfo(f"Connected to {addr}")
         except socket.timeout:
-            rospy.loginfo("Socket timed out. No connection established."
+            rospy.loginfo("Socket timed out. No connection established.")
 
         # Set a timeout for the connection and receive data.
         cmd = None
