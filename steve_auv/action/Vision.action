@@ -2,7 +2,7 @@
 string action
 ---
 # Result
-int start_idx
-int end_idx
+int16 start_idx
+int16 end_idx
 ---
 #Feedback

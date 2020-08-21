@@ -20,9 +20,13 @@ add_message_files(FILES
   GncThrustersMsg.msg
 )
 
-generate_messages(DEPENDENCIES actionlib_msgs)
-
 catkin_python_setup()
+
+generate_messages(DEPENDENCIES
+  std_msgs
+  actionlib_msgs
+)
+
 catkin_package(CATKIN_DEPENDS
   message_runtime
 )
@@ -44,4 +48,4 @@ catkin_add_nosetests(test/steve_auv/comms/test_comms.py)
 catkin_add_nosetests(test/steve_auv/gnc/test_gnc_demo.py)
 catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_clock.py)
 catkin_add_nosetests(test/steve_auv/mission_manager/test_mission_manager_demo.py)
-catkin_add_nosetests(test/steve_auv/gnc/test_vision.py)
+catkin_add_nosetests(test/steve_auv/vision/test_vision.py)

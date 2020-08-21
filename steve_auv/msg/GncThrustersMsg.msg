@@ -1,6 +1,6 @@
-float front_port
-float front_starboard
-float aft_port
-float aft_starboard
-float forward_port
-float forward_starboard
+float32 front_port
+float32 front_starboard
+float32 aft_port
+float32 aft_starboard
+float32 forward_port
+float32 forward_starboard
