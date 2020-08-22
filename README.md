@@ -21,6 +21,8 @@ scuba_steve/
     ├── setup.py
     ├── src/
         └── steve_auv/
+            ├── arduino_bridge/
+                └── bridge/
             ├── comms/
                 ├── server/
                 └── utils/
@@ -37,6 +39,7 @@ scuba_steve/
                 └── server/
     └── test/
         └── steve_auv/
+            ├── arduino_bridge/
             ├── comms/
             ├── gnc/
             ├── mission_manager/

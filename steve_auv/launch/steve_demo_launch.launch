@@ -1,4 +1,7 @@
 <launch>
+    <node name="arduino_bridge_node" pkg="steve_auv" type="arduino_bridge_node">
+        <param name="gnc_thrusters_topic" value="/steve_auv/gnc/thrusters"/>
+    </node>
     <node name="comms_node" pkg="steve_auv" type="comms_node">
         <param name="comms_mode_topic" value="/steve_auv/comms/mode"/>
         <param name="tcp_host" value="192.168.4.1"/>
