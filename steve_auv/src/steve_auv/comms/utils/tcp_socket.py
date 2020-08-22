@@ -28,40 +28,52 @@ class TcpSocket(object):
         # listen() enables a server to accept() connections making it a
         # "listening" socket.
         self._socket.listen(1)
+        self._conn = None
 
-    def listen(self):
+    def accept_connection(self):
         # accept() blocks and waits for an incoming connection. When a client
         # connects, it returns a new socket object representing the connection
         # and a tuple holding the address of the client.
-        conn = None
-        self._socket.settimeout(1)
+        self._socket.settimeout(60)
         try:
-            conn, addr = self._socket.accept()
+            self.conn, addr = self._socket.accept()
             rospy.loginfo(f"Connected to {addr}")
         except socket.timeout:
             rospy.loginfo("Socket timed out. No connection established.")
 
+    def has_connection(self):
+        if self._conn:
+            return True
+        else
+            return False
+
+    def listen_connection(self):
         # Set a timeout for the connection and receive data.
         cmd = None
-        if conn:
-            conn.settimeout(1)
-            while True:
-                try:
-                    data = conn.recv(1024)
-                except socket.timeout:
-                    rospy.loginfo("Connection timed out. Closing connection.")
-                    break
+        if self.has_connection():
+            self._conn.settimeout(10)
+            data = None
+            try:
+                data = self._conn.recv(1024)
+            except socket.timeout:
+                rospy.loginfo("Connection timed out. Try listening again.")
+                return cmd
+            self._conn.settimeout(None)
 
-                # Extract the command and send acknowledgement.
-	        if data:
-                    cmd = data.decode()
-                    rospy.loginfo("Command received from client: {cmd}")
-                    response = "ACK: " + cmd
-                    conn.sendall(str.encode(response))
-                # If returned an empty bytes object, the client closed the
-                # connection. As such, close the socket's connection.
-                else:
-                    rospy.loginfo("Client closed connection. Closing connection.")
-                    conn.close()
-                    break
+            # Extract the command and send acknowledgement.
+	    if data:
+                cmd = data.decode()
+                rospy.loginfo("Command received from client: {cmd}")
+                response = "ACK: " + cmd
+                self._conn.sendall(str.encode(response))
+            # If returned an empty bytes object, the client closed the
+            # connection. As such, close the socket's connection.
+            else:
+                rospy.loginfo("Client closed connection. Closing connection.")
+                self.close_connection()
         return cmd
+
+    def close_connection(self):
+        if self.has_connection():
+            self._conn.close()
+            self._conn = None

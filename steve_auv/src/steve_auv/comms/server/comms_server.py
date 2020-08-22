@@ -41,30 +41,38 @@ class CommsServer(object):
             while True:
                 if self._server.is_preempt_requested():
                     break
-                cmd = self._socket.listen()
-                if cmd == "release":
-                    is_success = True
-                    break
-                rate.sleep() 
+                if self._socket.has_connection():
+                    cmd = self._socket.listen_connection()
+                    if cmd == "release":
+                        is_success = True
+                        break
+                else:
+                    self._socket.accept_connection()
+                rate.sleep()
+            self._socket.close_connection()
         elif goal.action == "comms":
              rate = rospy.Rate(1)
              while True:
                 if self._server.is_preempt_requested():
                     result.command = "continue"
                     break
-                cmd = self._socket.listen()
-                if cmd == "downlink":
-                    # TODO: Copy files
-                    pass
-                elif cmd == "continue":
-                    result.command = "continue"
-                    is_success = True
-                    break
-                elif cmd == "kill":
-                    result.command = "kill"
-                    is_success = True
-                    break
-                rate.sleep() 
+                if self._socket.has_connection():
+                    cmd = self._socket.listen_connection()
+                    if cmd == "downlink":
+                        # Do nothing
+                        pass
+                    elif cmd == "continue":
+                        result.command = "continue"
+                        is_success = True
+                        break
+                    elif cmd == "kill":
+                        result.command = "kill"
+                        is_success = True
+                        break
+                else:
+                    self._socket.accept_connection()
+                rate.sleep()
+            self._socket.close_connection()
         else:
             rospy.logerr("Invalid goal received. Cancelling goal.")
 
