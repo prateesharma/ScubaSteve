@@ -20,6 +20,7 @@ def main():
                  rospy.get_name(),
                  rospy.get_param('~gnc_thrusters_topic')
              )
+    bridge.execute()
     rospy.spin()
 
 
