@@ -11,6 +11,7 @@
   <exec_depend>message_runtime</exec_depend>
   <depend>actionlib</depend>
   <depend>actionlib_msgs</depend>
+  <depend>scikit-image</depend>
   <depend>rospy</depend>
   <depend>smach</depend>
   <depend>smach_msgs</depend>
