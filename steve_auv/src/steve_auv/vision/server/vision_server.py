@@ -6,9 +6,11 @@
 import actionlib
 import rospy
 import steve_auv.gnc as gnc
+import steve_auv.vision as vision
 import time
 
 from steve_auv.msg import VisionAction, VisionResult
+from vision import PiCameraWrapper
 
 
 class VisionServer(object):
@@ -31,8 +33,8 @@ class VisionServer(object):
                        ).start()
         self._output_dir = output_dir
         self._rate = rate
-        # TODO: Set up camera
-        self._image_count = 0
+        self._camera = PiCameraWrapper()
+        self._poi_image_count = 0
 
     def execute_cb(self, goal):
         is_success = False
@@ -42,10 +44,18 @@ class VisionServer(object):
             while True:
                 if self._server.is_preempt_requested():
                     break
-                # TODO: 1) Take picture
-                # TODO: 2) Run Hough transform
-                # TODO: 3) If POI, localize
-                # TODO: 4) If POI, write image to output dir, increment count
+
+                # 1) Capture the image with the camera
+                image = PiCameraWrapper.capture()
+
+                # 2) Run Hough transform
+                # TODO
+
+                # 3) If POI, localize
+                # TODO
+
+                # 4) If POI, write image to output dir, increment count
+                # TODO
                 rate.sleep()
         else:
             rospy.logerr("Invalid goal received. Cancelling goal.")
