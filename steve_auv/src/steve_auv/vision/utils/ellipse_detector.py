@@ -44,11 +44,11 @@ def main():
 
     from skimage import color, img_as_ubyte
     from skimage.feature import canny
-    from skimage_transform import hough_ellipse
+    from skimage.transform import hough_ellipse
     from skimage.draw import ellipse_perimeter
 
     edges = canny(image, sigma=2.0, low_threshold=0.55, high_threshold=0.8)
-    result = hough_ellipse(edges, accuracy=20, threshold=250, mmin_size=100, max_size=120)
+    result = hough_ellipse(edges, accuracy=20, threshold=250, min_size=100, max_size=120)
     result.sort(order='accumulator')
 
     #detector = EllipseDetector()
