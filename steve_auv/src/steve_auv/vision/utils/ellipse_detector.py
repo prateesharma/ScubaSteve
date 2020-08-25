@@ -19,7 +19,7 @@ from skimage.transform import resize
 
 
 class EllipseDetector(object):
-    """Detects ellipses in an image and returns their locations."""
+    """Detects ellipses in an image and saves them to files."""
 
     def __init__(self):
         if 'rospy' in sys.modules:
