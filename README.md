@@ -36,7 +36,8 @@ scuba_steve/
             ├── transducers/
             └── vision/
                 ├── camera/
-                └── server/
+                ├── server/
+                └── utils/
     └── test/
         └── steve_auv/
             ├── arduino_bridge/
